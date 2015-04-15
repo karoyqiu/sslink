@@ -22,53 +22,22 @@
  *
  **************************************************************************************************/
 #pragma once
-#ifndef SSLINK_H
-#define SSLINK_H
+#ifndef SHADOWSOCKSSERVER_H
+#define SHADOWSOCKSSERVER_H
 
-#include <QObject>
-#include "shadowsocksserver.h"
-
-class QWebPage;
+#include <QString>
+#include <QList>
 
 
-class SSLink : public QObject
+struct ShadowsocksServer
 {
-    Q_OBJECT
-
-    enum Stage
-    {
-        None,
-        Login,
-        GetFreeAccount
-    };
-
-public:
-    explicit SSLink(QWebPage *page = Q_NULLPTR, QObject *parent = Q_NULLPTR);
-    virtual ~SSLink();
-
-    ShadowsocksServerList serverList() const;
-
-public slots:
-    void setUserName(const QString &value);
-    void setPassword(const QString &value);
-
-    void login();
-
-signals:
-    void loggedIn();
-    void gotServerList();
-
-private slots:
-    void processPage(bool ok);
-
-private:
-    void submitLoginForm();
-    void parseFreeAccounts();
-
-private:
-    QWebPage *page_;
-    Stage stage_;
+    QString ip;
+    QString port;
+    QString password;
+    QString cipher;
 };
 
+typedef QList<ShadowsocksServer> ShadowsocksServerList;
 
-#endif // SSLINK_H
+
+#endif // SHADOWSOCKSSERVER_H

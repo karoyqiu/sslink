@@ -17,6 +17,7 @@ SOURCES += main.cpp\
     sslink.cpp
 
 HEADERS  += mainwidget.h \
-    sslink.h
+    sslink.h \
+    shadowsocksserver.h
 
 FORMS    += mainwidget.ui

@@ -144,14 +144,48 @@ void SSLink::parseFreeAccounts()
     QWebElement table = f->findFirstElement("table");
     Q_ASSERT(!table.isNull());
 
-    QWebElement thead = table.findFirst("thead tr th");
+    QWebElement thead = table.findFirst("thead tr");
+    QWebElementCollection tds = thead.findAll("th");
+    int ipIndex = -1, portIndex = -1, passwordIndex = -1, cipherIndex = -1;
 
-    while (!thead.isNull())
+    for (int i = 0; i < tds.count(); i++)
     {
-        qDebug() << thead.toPlainText();
-        thead = thead.nextSibling();
+        auto th = tds.at(i);
+        qDebug() << i << th.toPlainText();
+
+        if (th.toPlainText() == QStringLiteral("服务器IP"))
+        {
+            ipIndex = i;
+        }
+        else if (th.toPlainText() == QStringLiteral("服务器端口"))
+        {
+            portIndex = i;
+        }
+        else if (th.toPlainText() == QStringLiteral("密码"))
+        {
+            passwordIndex = i;
+        }
+        else if (th.toPlainText() == QStringLiteral("加密算法"))
+        {
+            cipherIndex = i;
+        }
+    }
+
+    Q_ASSERT(ipIndex != -1 && portIndex != -1 && passwordIndex != -1 && cipherIndex != -1);
+    qDebug() << "IP:" << ipIndex << ", port:" << portIndex << ", password:" << passwordIndex
+             << ", cipher:" << cipherIndex;
+
+    QWebElement tbody = table.findFirst("tbody tr");
+
+    while (!tbody.isNull())
+    {
+        tds = tbody.findAll("td");
+        qDebug() << tds.at(ipIndex).toPlainText() << tds.at(portIndex).toPlainText()
+                 << tds.at(passwordIndex).toPlainText() << tds.at(cipherIndex).toPlainText();
+        tbody = tbody.nextSibling();
     }
 
     stage_ = None;
     qDebug() << "Done.";
+    emit gotServerList();
 }

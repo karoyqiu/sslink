@@ -24,12 +24,23 @@
 #include "mainwidget.h"
 #include "ui_mainwidget.h"
 
+#include "sslink.h"
+
+#include <QWebSettings>
+
 
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MainWidget)
 {
+    QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+
     ui->setupUi(this);
+    connect(ui->pushButton, &QPushButton::clicked, this, [this]()
+    {
+        SSLink *sslink = new SSLink(this->ui->webView->page(), this);
+        sslink->login();
+    });
 }
 
 

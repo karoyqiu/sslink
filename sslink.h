@@ -1,13 +1,13 @@
 ﻿/*! ***********************************************************************************************
  *
- * \file        main.cpp
- * \brief       The  class.
+ * file
+ * brief       The  class.
  *
- * \version     0.1
- * \date        2015/4/15
+ * version     0.1
+ * date        2015/4/15
  *
- * \author      Roy QIU (karoyqiu@gmail.com)
- * \copyright   © 2015 Roy QIU.
+ * author      Roy QIU (karoyqiu@gmail.com)
+ * copyright   © 2015 Roy QIU.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation; either version 3 of the
@@ -21,20 +21,50 @@
  * email to karoyqiu@gmail.com.
  *
  **************************************************************************************************/
-#include <QApplication>
+#pragma once
+#ifndef SSLINK_H
+#define SSLINK_H
 
-#include "mainwidget.h"
+#include <QObject>
+
+class QWebPage;
 
 
-int main(int argc, char *argv[])
+class SSLink : public QObject
 {
-    QApplication a(argc, argv);
-    QApplication::setOrganizationName(QStringLiteral("Q"));
-    QApplication::setApplicationName(QStringLiteral("ss-link"));
-    QApplication::setApplicationDisplayName(QStringLiteral("SS-Link"));
+    Q_OBJECT
 
-    MainWidget w;
-    w.show();
+    enum Stage
+    {
+        None,
+        Login,
+        GetFreeAccount
+    };
 
-    return a.exec();
-}
+public:
+    explicit SSLink(QWebPage *page = Q_NULLPTR, QObject *parent = Q_NULLPTR);
+    virtual ~SSLink();
+
+public slots:
+    void setUserName(const QString &value);
+    void setPassword(const QString &value);
+
+    void login();
+
+signals:
+    void loggedIn();
+
+private slots:
+    void processPage(bool ok);
+
+private:
+    void submitLoginForm();
+    void parseFreeAccounts();
+
+private:
+    QWebPage *page_;
+    Stage stage_;
+};
+
+
+#endif // SSLINK_H

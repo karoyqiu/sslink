@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui webkitwidgets
+QT       += core gui concurrent webkitwidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwidget.cpp \
     sslink.cpp \
-    shadowsocksserverlistmodel.cpp
+    shadowsocksserverlistmodel.cpp \
+    ping.cpp
 
 HEADERS  += mainwidget.h \
     sslink.h \
     shadowsocksserver.h \
-    shadowsocksserverlistmodel.h
+    shadowsocksserverlistmodel.h \
+    ping.h
 
 FORMS    += mainwidget.ui

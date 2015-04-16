@@ -40,7 +40,7 @@ class ShadowsocksServerListModel : public QAbstractListModel
         Port,
         Password,
         Cipher,
-        Ping,
+        PingRTT,
         ColumnCount
     };
 
@@ -58,10 +58,15 @@ public:
 
     void add(const ShadowsocksServer &server);
     void removeAt(int index);
+    void setAt(int index, const ShadowsocksServer &server);
     void reset(const ShadowsocksServerList &list);
+
+private slots:
+    void updatePing(int rtt);
 
 private:
     ShadowsocksServerList sss_;
+    QObjectList pingers_;
 };
 
 

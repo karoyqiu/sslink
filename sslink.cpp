@@ -29,6 +29,7 @@
 #include <QWebFrame>
 #include <QWebPage>
 
+#include "ping.h"
 #include "shadowsocksserverlistmodel.h"
 
 

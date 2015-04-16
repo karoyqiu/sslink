@@ -22,6 +22,7 @@
  *
  **************************************************************************************************/
 #include "shadowsocksserverlistmodel.h"
+#include "ping.h"
 
 
 ShadowsocksServerListModel::ShadowsocksServerListModel(QObject *parent)
@@ -71,7 +72,7 @@ QVariant ShadowsocksServerListModel::data(const QModelIndex &index, int role) co
         case Cipher:
             var = ss.cipher;
             break;
-        case Ping:
+        case PingRTT:
             var = ss.ping;
             break;
         }
@@ -101,8 +102,8 @@ QVariant ShadowsocksServerListModel::headerData(int section, Qt::Orientation ori
         case Cipher:
             var = tr("Cipher");
             break;
-        case Ping:
-            var = tr("Ping");
+        case PingRTT:
+            var = tr("Ping RTT");
             break;
         }
     }
@@ -138,9 +139,41 @@ void ShadowsocksServerListModel::removeAt(int index)
 }
 
 
+void ShadowsocksServerListModel::setAt(int index, const ShadowsocksServer &server)
+{
+    sss_.replace(index, server);
+    emit dataChanged(createIndex(index, 0), createIndex(index, ColumnCount - 1));
+}
+
+
 void ShadowsocksServerListModel::reset(const ShadowsocksServerList &list)
 {
     beginResetModel();
     sss_ = list;
     endResetModel();
+
+    qDeleteAll(pingers_);
+    pingers_.clear();
+
+    foreach (const ShadowsocksServer &ss, list)
+    {
+        Ping *ping = new Ping(this);
+        pingers_.append(ping);
+        connect(ping, &Ping::finished, this, &ShadowsocksServerListModel::updatePing);
+        ping->ping(ss.ip);
+    }
+}
+
+
+void ShadowsocksServerListModel::updatePing(int rtt)
+{
+    Ping *ping = static_cast<Ping *>(sender());
+
+    if (ping)
+    {
+        int i = pingers_.indexOf(ping);
+        ShadowsocksServer ss = sss_.at(i);
+        ss.ping = rtt;
+        setAt(i, ss);
+    }
 }

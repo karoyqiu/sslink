@@ -1,4 +1,4 @@
-/*! ***********************************************************************************************
+﻿/*! ***********************************************************************************************
  *
  * file
  * brief       The  class.
@@ -21,17 +21,126 @@
  * email to karoyqiu@gmail.com.
  *
  **************************************************************************************************/
-#pragma once
-
 #include "shadowsocksserverlistmodel.h"
 
-ShadowsocksServerListModel::ShadowsocksServerListModel()
-{
 
+ShadowsocksServerListModel::ShadowsocksServerListModel(QObject *parent)
+    : QAbstractListModel(parent)
+{
 }
+
 
 ShadowsocksServerListModel::~ShadowsocksServerListModel()
 {
-
 }
 
+
+int ShadowsocksServerListModel::rowCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent)
+    return sss_.count();
+}
+
+
+int ShadowsocksServerListModel::columnCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent)
+    return ColumnCount;
+}
+
+
+QVariant ShadowsocksServerListModel::data(const QModelIndex &index, int role) const
+{
+    QVariant var;
+
+    if (index.isValid() && role == Qt::DisplayRole)
+    {
+        const ShadowsocksServer &ss = sss_.at(index.row());
+
+        switch (index.column())
+        {
+        case IPAddress:
+            var = ss.ip;
+            break;
+        case Port:
+            var = ss.port;
+            break;
+        case Password:
+            var = ss.password;
+            break;
+        case Cipher:
+            var = ss.cipher;
+            break;
+        case Ping:
+            var = ss.ping;
+            break;
+        }
+    }
+
+    return var;
+}
+
+
+QVariant ShadowsocksServerListModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    QVariant var;
+
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+    {
+        switch (section)
+        {
+        case IPAddress:
+            var = tr("IP Address");
+            break;
+        case Port:
+            var = tr("Port");
+            break;
+        case Password:
+            var = tr("Password");
+            break;
+        case Cipher:
+            var = tr("Cipher");
+            break;
+        case Ping:
+            var = tr("Ping");
+            break;
+        }
+    }
+
+    return var;
+}
+
+
+Qt::ItemFlags ShadowsocksServerListModel::flags(const QModelIndex &index) const
+{
+    return QAbstractListModel::flags(index);
+}
+
+
+void ShadowsocksServerListModel::sort(int column, Qt::SortOrder order)
+{
+}
+
+
+void ShadowsocksServerListModel::add(const ShadowsocksServer &server)
+{
+    beginInsertRows(QModelIndex(), rowCount(), rowCount());
+    sss_.append(server);
+    endInsertRows();
+}
+
+
+void ShadowsocksServerListModel::removeAt(int index)
+{
+    beginRemoveRows(QModelIndex(), index, index);
+    sss_.removeAt(index);
+    endRemoveRows();
+}
+
+
+void ShadowsocksServerListModel::reset(const ShadowsocksServerList &list)
+{
+    beginResetModel();
+    sss_ = list;
+    endResetModel();
+}

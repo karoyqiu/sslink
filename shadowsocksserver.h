@@ -32,9 +32,10 @@
 struct ShadowsocksServer
 {
     QString ip;
-    QString port;
+    int port;
     QString password;
     QString cipher;
+    int ping;
 };
 
 typedef QList<ShadowsocksServer> ShadowsocksServerList;

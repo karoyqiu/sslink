@@ -25,6 +25,7 @@
 #include "ui_mainwidget.h"
 
 #include "sslink.h"
+#include "shadowsocksserverlistmodel.h"
 
 #include <QWebSettings>
 
@@ -38,7 +39,8 @@ MainWidget::MainWidget(QWidget *parent)
     ui->setupUi(this);
     connect(ui->pushButton, &QPushButton::clicked, this, [this]()
     {
-        SSLink *sslink = new SSLink(this->ui->webView->page(), this);
+        SSLink *sslink = new SSLink(Q_NULLPTR, this);
+        ui->treeView->setModel(sslink->serverList());
         sslink->login();
     });
 }

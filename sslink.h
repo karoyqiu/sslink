@@ -26,9 +26,9 @@
 #define SSLINK_H
 
 #include <QObject>
-#include "shadowsocksserver.h"
 
 class QWebPage;
+class ShadowsocksServerListModel;
 
 
 class SSLink : public QObject
@@ -46,7 +46,7 @@ public:
     explicit SSLink(QWebPage *page = Q_NULLPTR, QObject *parent = Q_NULLPTR);
     virtual ~SSLink();
 
-    ShadowsocksServerList serverList() const;
+    ShadowsocksServerListModel* serverList() const;
 
 public slots:
     void setUserName(const QString &value);
@@ -68,6 +68,7 @@ private:
 private:
     QWebPage *page_;
     Stage stage_;
+    ShadowsocksServerListModel *model_;
 };
 
 

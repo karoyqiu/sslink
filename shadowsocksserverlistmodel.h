@@ -1,4 +1,4 @@
-/*! ***********************************************************************************************
+﻿/*! ***********************************************************************************************
  *
  * file
  * brief       The  class.
@@ -22,17 +22,47 @@
  *
  **************************************************************************************************/
 #pragma once
-
 #ifndef SHADOWSOCKSSERVERLISTMODEL_H
 #define SHADOWSOCKSSERVERLISTMODEL_H
 
-#include <QObject>
+#include <QAbstractListModel>
+
+#include "shadowsocksserver.h"
+
 
 class ShadowsocksServerListModel : public QAbstractListModel
 {
+    Q_OBJECT
+
+    enum Column
+    {
+        IPAddress,
+        Port,
+        Password,
+        Cipher,
+        Ping,
+        ColumnCount
+    };
+
 public:
-    ShadowsocksServerListModel();
-    ~ShadowsocksServerListModel();
+    explicit ShadowsocksServerListModel(QObject *parent = Q_NULLPTR);
+    virtual ~ShadowsocksServerListModel();
+
+    // QAbstractItemModel interface
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE;
+
+    void add(const ShadowsocksServer &server);
+    void removeAt(int index);
+    void reset(const ShadowsocksServerList &list);
+
+private:
+    ShadowsocksServerList sss_;
 };
+
 
 #endif // SHADOWSOCKSSERVERLISTMODEL_H

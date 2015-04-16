@@ -29,11 +29,14 @@
 #include <QWebFrame>
 #include <QWebPage>
 
+#include "shadowsocksserverlistmodel.h"
+
 
 SSLink::SSLink(QWebPage *page, QObject *parent)
     : QObject(parent)
     , page_(page)
     , stage_(None)
+    , model_(Q_NULLPTR)
 {
     if (page_ == Q_NULLPTR)
     {
@@ -41,17 +44,24 @@ SSLink::SSLink(QWebPage *page, QObject *parent)
         Q_CHECK_PTR(page_);
     }
 
-
     connect(page_, &QWebPage::loadFinished, this, &SSLink::processPage);
     connect(page_, &QWebPage::loadStarted, this, [this]()
     {
         qDebug() << "Load started:" << page_->mainFrame()->url();
     });
+
+    model_ = new ShadowsocksServerListModel(this);
 }
 
 
 SSLink::~SSLink()
 {
+}
+
+
+ShadowsocksServerListModel *SSLink::serverList() const
+{
+    return model_;
 }
 
 
@@ -176,15 +186,22 @@ void SSLink::parseFreeAccounts()
              << ", cipher:" << cipherIndex;
 
     QWebElement tbody = table.findFirst("tbody tr");
+    ShadowsocksServerList list;
 
     while (!tbody.isNull())
     {
+        ShadowsocksServer ss;
         tds = tbody.findAll("td");
-        qDebug() << tds.at(ipIndex).toPlainText() << tds.at(portIndex).toPlainText()
-                 << tds.at(passwordIndex).toPlainText() << tds.at(cipherIndex).toPlainText();
+        ss.ip = tds.at(ipIndex).toPlainText();
+        ss.port = tds.at(portIndex).toPlainText().toInt();
+        ss.password = tds.at(passwordIndex).toPlainText();
+        ss.cipher = tds.at(cipherIndex).toPlainText();
+        ss.ping = 0;
+        list.append(ss);
         tbody = tbody.nextSibling();
     }
 
+    model_->reset(list);
     stage_ = None;
     qDebug() << "Done.";
     emit gotServerList();

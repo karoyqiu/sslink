@@ -14,10 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwidget.cpp \
-    sslink.cpp
+    sslink.cpp \
+    shadowsocksserverlistmodel.cpp
 
 HEADERS  += mainwidget.h \
     sslink.h \
-    shadowsocksserver.h
+    shadowsocksserver.h \
+    shadowsocksserverlistmodel.h
 
 FORMS    += mainwidget.ui

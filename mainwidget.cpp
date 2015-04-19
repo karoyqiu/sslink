@@ -41,6 +41,8 @@ MainWidget::MainWidget(QWidget *parent)
     {
         SSLink *sslink = new SSLink(Q_NULLPTR, this);
         ui->treeView->setModel(sslink->serverList());
+        connect(ui->treeView, &QTreeView::doubleClicked,
+                sslink->serverList(), &ShadowsocksServerListModel::selectServer);
         sslink->login();
     });
 }

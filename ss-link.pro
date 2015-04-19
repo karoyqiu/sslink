@@ -16,12 +16,14 @@ SOURCES += main.cpp\
         mainwidget.cpp \
     sslink.cpp \
     shadowsocksserverlistmodel.cpp \
-    ping.cpp
+    ping.cpp \
+    ssproxy.cpp
 
 HEADERS  += mainwidget.h \
     sslink.h \
     shadowsocksserver.h \
     shadowsocksserverlistmodel.h \
-    ping.h
+    ping.h \
+    ssproxy.h
 
 FORMS    += mainwidget.ui

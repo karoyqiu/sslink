@@ -196,7 +196,7 @@ void SSLink::parseFreeAccounts()
         ss.ip = tds.at(ipIndex).toPlainText();
         ss.port = tds.at(portIndex).toPlainText().toInt();
         ss.password = tds.at(passwordIndex).toPlainText();
-        ss.cipher = tds.at(cipherIndex).toPlainText();
+        ss.method = tds.at(cipherIndex).toPlainText();
         ss.ping = 0;
         list.append(ss);
         tbody = tbody.nextSibling();

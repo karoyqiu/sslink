@@ -23,10 +23,13 @@
  **************************************************************************************************/
 #include "shadowsocksserverlistmodel.h"
 #include "ping.h"
+#include "ssproxy.h"
 
 
 ShadowsocksServerListModel::ShadowsocksServerListModel(QObject *parent)
     : QAbstractListModel(parent)
+    , current_(-1)
+    , proxy_(Q_NULLPTR)
 {
 }
 
@@ -54,26 +57,38 @@ QVariant ShadowsocksServerListModel::data(const QModelIndex &index, int role) co
 {
     QVariant var;
 
-    if (index.isValid() && role == Qt::DisplayRole)
+    if (index.isValid())
     {
         const ShadowsocksServer &ss = sss_.at(index.row());
 
-        switch (index.column())
+        switch (role)
         {
-        case IPAddress:
-            var = ss.ip;
+        case Qt::DisplayRole:
+            switch (index.column())
+            {
+            case IPAddress:
+                var = ss.ip;
+                break;
+            case Port:
+                var = ss.port;
+                break;
+            case Password:
+                var = ss.password;
+                break;
+            case Method:
+                var = ss.method;
+                break;
+            case PingRTT:
+                var = ss.ping;
+                break;
+            }
             break;
-        case Port:
-            var = ss.port;
-            break;
-        case Password:
-            var = ss.password;
-            break;
-        case Cipher:
-            var = ss.cipher;
-            break;
-        case PingRTT:
-            var = ss.ping;
+
+        case Qt::CheckStateRole:
+            if (index.column() == IPAddress)
+            {
+                var = index.row() == current_ ? Qt::Checked : Qt::Unchecked;
+            }
             break;
         }
     }
@@ -99,8 +114,8 @@ QVariant ShadowsocksServerListModel::headerData(int section, Qt::Orientation ori
         case Password:
             var = tr("Password");
             break;
-        case Cipher:
-            var = tr("Cipher");
+        case Method:
+            var = tr("Method");
             break;
         case PingRTT:
             var = tr("Ping RTT");
@@ -114,12 +129,7 @@ QVariant ShadowsocksServerListModel::headerData(int section, Qt::Orientation ori
 
 Qt::ItemFlags ShadowsocksServerListModel::flags(const QModelIndex &index) const
 {
-    return QAbstractListModel::flags(index);
-}
-
-
-void ShadowsocksServerListModel::sort(int column, Qt::SortOrder order)
-{
+    return QAbstractListModel::flags(index) | Qt::ItemIsUserCheckable;
 }
 
 
@@ -154,6 +164,7 @@ void ShadowsocksServerListModel::reset(const ShadowsocksServerList &list)
 
     qDeleteAll(pingers_);
     pingers_.clear();
+    current_ = -1;
 
     foreach (const ShadowsocksServer &ss, list)
     {
@@ -161,6 +172,24 @@ void ShadowsocksServerListModel::reset(const ShadowsocksServerList &list)
         pingers_.append(ping);
         connect(ping, &Ping::finished, this, &ShadowsocksServerListModel::updatePing);
         ping->ping(ss.ip);
+    }
+}
+
+
+void ShadowsocksServerListModel::selectServer(const QModelIndex &index)
+{
+    if (index.isValid())
+    {
+        delete proxy_;
+        proxy_ = new SSProxy(sss_.at(index.row()), true, this);
+        connect(proxy_, &SSProxy::ready, this, [this, index]()
+        {
+            beginResetModel();
+            this->current_ = index.row();
+            endResetModel();
+        });
+
+        proxy_->start();
     }
 }
 

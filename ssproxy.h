@@ -4,7 +4,7 @@
  * brief       The  class.
  *
  * version     0.1
- * date        2015/4/15
+ * date        2015/4/19
  *
  * author      Roy QIU (karoyqiu@gmail.com)
  * copyright   © 2015 Roy QIU.
@@ -22,23 +22,37 @@
  *
  **************************************************************************************************/
 #pragma once
-#ifndef SHADOWSOCKSSERVER_H
-#define SHADOWSOCKSSERVER_H
+#ifndef SSPROXY_H
+#define SSPROXY_H
 
-#include <QString>
-#include <QList>
+#include <QObject>
+
+#include "shadowsocksserver.h"
 
 
-struct ShadowsocksServer
+class SSProxy : public QObject
 {
-    QString ip;
-    int port;
-    QString password;
-    QString method;
-    int ping;
+    Q_OBJECT
+    Q_DISABLE_COPY(SSProxy)
+
+public:
+    explicit SSProxy(const ShadowsocksServer &server, bool local = true, QObject *parent = Q_NULLPTR);
+    virtual ~SSProxy();
+
+public slots:
+    void start();
+
+signals:
+    void ready();
+
+private:
+    void startSslocal();
+    void startPolipo(QObject *sslocal);
+
+private:
+    const ShadowsocksServer server_;
+    bool local_;
 };
 
-typedef QList<ShadowsocksServer> ShadowsocksServerList;
 
-
-#endif // SHADOWSOCKSSERVER_H
+#endif // SSPROXY_H

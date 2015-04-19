@@ -29,6 +29,8 @@
 
 #include "shadowsocksserver.h"
 
+class SSProxy;
+
 
 class ShadowsocksServerListModel : public QAbstractListModel
 {
@@ -39,7 +41,7 @@ class ShadowsocksServerListModel : public QAbstractListModel
         IPAddress,
         Port,
         Password,
-        Cipher,
+        Method,
         PingRTT,
         ColumnCount
     };
@@ -54,12 +56,15 @@ public:
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     virtual Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
-    virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE;
+    //virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE;
 
     void add(const ShadowsocksServer &server);
     void removeAt(int index);
     void setAt(int index, const ShadowsocksServer &server);
     void reset(const ShadowsocksServerList &list);
+
+public slots:
+    void selectServer(const QModelIndex &index);
 
 private slots:
     void updatePing(int rtt);
@@ -67,6 +72,8 @@ private slots:
 private:
     ShadowsocksServerList sss_;
     QObjectList pingers_;
+    int current_;
+    SSProxy *proxy_;
 };
 
 

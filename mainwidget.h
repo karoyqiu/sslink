@@ -26,6 +26,7 @@
 #define MAINWIDGET_H
 
 #include <QWidget>
+#include <QSystemTrayIcon>
 
 namespace Ui {
 class MainWidget;
@@ -46,9 +47,13 @@ protected:
     virtual void changeEvent(QEvent *e) Q_DECL_OVERRIDE;
     virtual void closeEvent(QCloseEvent *e) Q_DECL_OVERRIDE;
 
+private slots:
+    void handleTrayActivation(QSystemTrayIcon::ActivationReason reason);
+
 private:
     Ui::MainWidget *ui;
     SSLink *sslink_;
+    QSystemTrayIcon *tray_;
 };
 
 

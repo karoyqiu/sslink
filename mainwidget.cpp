@@ -25,6 +25,7 @@
 #include "ui_mainwidget.h"
 
 #include <QSettings>
+#include <QSystemTrayIcon>
 #include <QTimer>
 #include <QWebSettings>
 
@@ -36,6 +37,7 @@ MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MainWidget)
     , sslink_(Q_NULLPTR)
+    , tray_(Q_NULLPTR)
 {
     QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 
@@ -47,7 +49,12 @@ MainWidget::MainWidget(QWidget *parent)
 
     QSettings settings;
     restoreGeometry(settings.value("geometry").toByteArray());
-    ui->treeView->restoreGeometry(settings.value("viewGeometry").toByteArray());
+    ui->treeView->header()->restoreState(settings.value("viewGeometry").toByteArray());
+
+    tray_ = new QSystemTrayIcon(windowIcon(), this);
+    tray_->setToolTip(QApplication::applicationDisplayName());
+    tray_->show();
+    connect(tray_, &QSystemTrayIcon::activated, this, &MainWidget::handleTrayActivation);
 
     QTimer::singleShot(1000, sslink_, SLOT(login()));
 }
@@ -62,12 +69,21 @@ MainWidget::~MainWidget()
 void MainWidget::changeEvent(QEvent *e)
 {
     QWidget::changeEvent(e);
+    QSettings settings;
 
     switch (e->type())
     {
     case QEvent::LanguageChange:
         ui->retranslateUi(this);
         break;
+
+    case QEvent::WindowStateChange:
+        if ((windowState() & Qt::WindowMinimized) && settings.value("hideOnMinimized", true).toBool())
+        {
+            hide();
+        }
+        break;
+
     default:
         break;
     }
@@ -78,6 +94,18 @@ void MainWidget::closeEvent(QCloseEvent *e)
 {
     QSettings settings;
     settings.setValue("geometry", saveGeometry());
-    settings.setValue("viewGeometry", ui->treeView->saveGeometry());
+    settings.setValue("viewGeometry", ui->treeView->header()->saveState());
     QWidget::closeEvent(e);
+}
+
+
+void MainWidget::handleTrayActivation(QSystemTrayIcon::ActivationReason reason)
+{
+    if (reason == QSystemTrayIcon::Trigger)
+    {
+        show();
+        raise();
+        activateWindow();
+        setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+    }
 }

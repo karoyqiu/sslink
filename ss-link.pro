@@ -32,3 +32,4 @@ RESOURCES += \
     shadowsocks.qrc
 
 RC_ICONS = res/shadowsocks.ico
+VERSION = 0.1

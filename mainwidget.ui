@@ -16,24 +16,6 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QPushButton" name="buttonRefresh">
-       <property name="text">
-        <string>&amp;Refresh servers</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="buttonPing">
-       <property name="text">
-        <string>&amp;Ping servers</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
     <widget class="QTreeView" name="treeView">
      <property name="rootIsDecorated">
       <bool>false</bool>
@@ -47,8 +29,6 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
-  <tabstop>buttonRefresh</tabstop>
-  <tabstop>buttonPing</tabstop>
   <tabstop>treeView</tabstop>
  </tabstops>
  <resources>

@@ -24,27 +24,32 @@
 #include "mainwidget.h"
 #include "ui_mainwidget.h"
 
+#include <QSettings>
+#include <QTimer>
+#include <QWebSettings>
+
 #include "sslink.h"
 #include "shadowsocksserverlistmodel.h"
-
-#include <QWebSettings>
 
 
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MainWidget)
+    , sslink_(Q_NULLPTR)
 {
     QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 
     ui->setupUi(this);
-    connect(ui->pushButton, &QPushButton::clicked, this, [this]()
-    {
-        SSLink *sslink = new SSLink(Q_NULLPTR, this);
-        ui->treeView->setModel(sslink->serverList());
-        connect(ui->treeView, &QTreeView::doubleClicked,
-                sslink->serverList(), &ShadowsocksServerListModel::selectServer);
-        sslink->login();
-    });
+    sslink_ = new SSLink(this);
+    ui->treeView->setModel(sslink_->serverList());
+    connect(ui->treeView, &QTreeView::doubleClicked,
+            sslink_->serverList(), &ShadowsocksServerListModel::selectServer);
+
+    QSettings settings;
+    restoreGeometry(settings.value("geometry").toByteArray());
+    ui->treeView->restoreGeometry(settings.value("viewGeometry").toByteArray());
+
+    QTimer::singleShot(1000, sslink_, SLOT(login()));
 }
 
 
@@ -66,4 +71,13 @@ void MainWidget::changeEvent(QEvent *e)
     default:
         break;
     }
+}
+
+
+void MainWidget::closeEvent(QCloseEvent *e)
+{
+    QSettings settings;
+    settings.setValue("geometry", saveGeometry());
+    settings.setValue("viewGeometry", ui->treeView->saveGeometry());
+    QWidget::closeEvent(e);
 }

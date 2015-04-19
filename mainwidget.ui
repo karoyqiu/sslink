@@ -6,20 +6,32 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>533</width>
     <height>300</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>SS-Link</string>
+  <property name="windowIcon">
+   <iconset resource="shadowsocks.qrc">
+    <normaloff>:/images/ss128</normaloff>:/images/ss128</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QPushButton" name="pushButton">
-     <property name="text">
-      <string>Go!</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="buttonRefresh">
+       <property name="text">
+        <string>&amp;Refresh servers</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonPing">
+       <property name="text">
+        <string>&amp;Ping servers</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QTreeView" name="treeView">
@@ -34,6 +46,13 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <tabstops>
+  <tabstop>buttonRefresh</tabstop>
+  <tabstop>buttonPing</tabstop>
+  <tabstop>treeView</tabstop>
+ </tabstops>
+ <resources>
+  <include location="shadowsocks.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -31,6 +31,8 @@ namespace Ui {
 class MainWidget;
 }
 
+class SSLink;
+
 
 class MainWidget : public QWidget
 {
@@ -42,9 +44,12 @@ public:
 
 protected:
     virtual void changeEvent(QEvent *e) Q_DECL_OVERRIDE;
+    virtual void closeEvent(QCloseEvent *e) Q_DECL_OVERRIDE;
 
 private:
     Ui::MainWidget *ui;
+    SSLink *sslink_;
 };
+
 
 #endif // MAINWIDGET_H

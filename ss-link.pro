@@ -27,3 +27,8 @@ HEADERS  += mainwidget.h \
     ssproxy.h
 
 FORMS    += mainwidget.ui
+
+RESOURCES += \
+    shadowsocks.qrc
+
+RC_ICONS = res/shadowsocks.ico

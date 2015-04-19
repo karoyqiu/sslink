@@ -30,6 +30,7 @@
 #include "shadowsocksserver.h"
 
 class SSProxy;
+class QTimer;
 
 
 class ShadowsocksServerListModel : public QAbstractListModel
@@ -64,6 +65,7 @@ public:
     void reset(const ShadowsocksServerList &list);
 
 public slots:
+    void autoSelectServer();
     void selectServer(const QModelIndex &index);
 
 private slots:
@@ -74,6 +76,7 @@ private:
     QObjectList pingers_;
     int current_;
     SSProxy *proxy_;
+    QTimer *autoTimer_;
 };
 
 

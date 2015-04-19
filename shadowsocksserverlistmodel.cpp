@@ -22,6 +22,9 @@
  *
  **************************************************************************************************/
 #include "shadowsocksserverlistmodel.h"
+
+#include <QTimer>
+
 #include "ping.h"
 #include "ssproxy.h"
 
@@ -30,7 +33,12 @@ ShadowsocksServerListModel::ShadowsocksServerListModel(QObject *parent)
     : QAbstractListModel(parent)
     , current_(-1)
     , proxy_(Q_NULLPTR)
+    , autoTimer_(Q_NULLPTR)
 {
+    autoTimer_ = new QTimer(this);
+    autoTimer_->setInterval(1000);
+    autoTimer_->setSingleShot(true);
+    connect(autoTimer_, &QTimer::timeout, this, &ShadowsocksServerListModel::autoSelectServer);
 }
 
 
@@ -79,7 +87,14 @@ QVariant ShadowsocksServerListModel::data(const QModelIndex &index, int role) co
                 var = ss.method;
                 break;
             case PingRTT:
-                var = ss.ping;
+                if (ss.ping == std::numeric_limits<int>::max())
+                {
+                    var = tr("Timeout");
+                }
+                else
+                {
+                    var = ss.ping;
+                }
                 break;
             }
             break;
@@ -176,6 +191,27 @@ void ShadowsocksServerListModel::reset(const ShadowsocksServerList &list)
 }
 
 
+void ShadowsocksServerListModel::autoSelectServer()
+{
+    int minRtt = std::numeric_limits<int>::max();
+    int minIndex = -1;
+
+    for (int i = 0; i < sss_.count(); i++)
+    {
+        if (sss_.at(i).ping < minRtt)
+        {
+            minRtt = sss_.at(i).ping;
+            minIndex = i;
+        }
+    }
+
+    if (minIndex != current_)
+    {
+        selectServer(createIndex(minIndex, 0));
+    }
+}
+
+
 void ShadowsocksServerListModel::selectServer(const QModelIndex &index)
 {
     if (index.isValid())
@@ -204,5 +240,7 @@ void ShadowsocksServerListModel::updatePing(int rtt)
         ShadowsocksServer ss = sss_.at(i);
         ss.ping = rtt;
         setAt(i, ss);
+
+        autoTimer_->start();
     }
 }

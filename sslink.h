@@ -43,7 +43,7 @@ class SSLink : public QObject
     };
 
 public:
-    explicit SSLink(QWebPage *page = Q_NULLPTR, QObject *parent = Q_NULLPTR);
+    explicit SSLink(QObject *parent = Q_NULLPTR);
     virtual ~SSLink();
 
     ShadowsocksServerListModel* serverList() const;

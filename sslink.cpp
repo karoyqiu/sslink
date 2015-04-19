@@ -33,9 +33,9 @@
 #include "shadowsocksserverlistmodel.h"
 
 
-SSLink::SSLink(QWebPage *page, QObject *parent)
+SSLink::SSLink(QObject *parent)
     : QObject(parent)
-    , page_(page)
+    , page_(Q_NULLPTR)
     , stage_(None)
     , model_(Q_NULLPTR)
 {
@@ -197,7 +197,7 @@ void SSLink::parseFreeAccounts()
         ss.port = tds.at(portIndex).toPlainText().toInt();
         ss.password = tds.at(passwordIndex).toPlainText();
         ss.method = tds.at(cipherIndex).toPlainText();
-        ss.ping = 0;
+        ss.ping = std::numeric_limits<int>::max();
         list.append(ss);
         tbody = tbody.nextSibling();
     }

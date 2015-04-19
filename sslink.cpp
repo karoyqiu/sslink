@@ -76,7 +76,7 @@ void SSLink::setUserName(const QString &value)
 void SSLink::setPassword(const QString &value)
 {
     QSettings settings;
-    settings.setValue(QStringLiteral("password"), value);
+    settings.setValue(QStringLiteral("password"), qCompress(value.toUtf8()));
 }
 
 
@@ -140,7 +140,7 @@ void SSLink::submitLoginForm()
         return;
     }
 
-    value = settings.value(QStringLiteral("password")).toString();
+    value = QString::fromUtf8(qUncompress(settings.value(QStringLiteral("password")).toByteArray()));
     elem.setAttribute(QStringLiteral("value"), value);
 
     selector = settings.value(QStringLiteral("selector/login"), "login").toString();

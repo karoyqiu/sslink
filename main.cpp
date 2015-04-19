@@ -22,6 +22,7 @@
  *
  **************************************************************************************************/
 #include <QApplication>
+#include <QSettings>
 
 #include "mainwidget.h"
 
@@ -34,7 +35,12 @@ int main(int argc, char *argv[])
     QApplication::setApplicationDisplayName(QStringLiteral("SS-Link"));
 
     MainWidget w;
-    w.show();
+    QSettings settings;
+
+    if (!settings.value("hideOnStartUp", true).toBool())
+    {
+        w.show();
+    }
 
     return a.exec();
 }

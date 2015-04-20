@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     QApplication::setOrganizationName(QStringLiteral("Q"));
     QApplication::setApplicationName(QStringLiteral("ss-link"));
     QApplication::setApplicationDisplayName(QStringLiteral("SS-Link"));
-    QApplication::setApplicationVersion(QStringLiteral("0.1"));
+    QApplication::setApplicationVersion(QStringLiteral("0.2"));
     QApplication::setQuitOnLastWindowClosed(false);
 
     MainWidget w;

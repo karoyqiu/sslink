@@ -23,6 +23,7 @@
  **************************************************************************************************/
 #include "shadowsocksserverlistmodel.h"
 
+#include <QSettings>
 #include <QTimer>
 
 #include "ping.h"
@@ -191,6 +192,24 @@ void ShadowsocksServerListModel::reset(const ShadowsocksServerList &list)
 }
 
 
+ShadowsocksServer ShadowsocksServerListModel::currentServer() const
+{
+    ShadowsocksServer ss;
+
+    if (current_ < 0)
+    {
+        ss.ping = 0;
+        ss.port = 0;
+    }
+    else
+    {
+        ss = sss_.at(current_);
+    }
+
+    return ss;
+}
+
+
 void ShadowsocksServerListModel::autoSelectServer()
 {
     int minRtt = std::numeric_limits<int>::max();
@@ -217,12 +236,15 @@ void ShadowsocksServerListModel::selectServer(const QModelIndex &index)
     if (index.isValid())
     {
         delete proxy_;
-        proxy_ = new SSProxy(sss_.at(index.row()), true, this);
+        QSettings settings;
+        proxy_ = new SSProxy(sss_.at(index.row()), settings.value("local", true).toBool(), this);
+
         connect(proxy_, &SSProxy::ready, this, [this, index]()
         {
             beginResetModel();
             this->current_ = index.row();
             endResetModel();
+            emit currentServerChanged();
         });
 
         proxy_->start();

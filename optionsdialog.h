@@ -1,10 +1,10 @@
 ﻿/*! ***********************************************************************************************
  *
- * \file        main.cpp
- * \brief       The  class.
+ * \file        optionsdialog.h
+ * \brief       The OptionsDialog class.
  *
  * \version     0.1
- * \date        2015/4/15
+ * \date        2015/4/20
  *
  * \author      Roy QIU (karoyqiu@gmail.com)
  * \copyright   © 2015 Roy QIU.
@@ -21,28 +21,32 @@
  * email to karoyqiu@gmail.com.
  *
  **************************************************************************************************/
-#include <QApplication>
-#include <QSettings>
+#pragma once
+#ifndef OPTIONSDIALOG_H
+#define OPTIONSDIALOG_H
 
-#include "mainwidget.h"
+#include <QDialog>
 
-
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
-    QApplication::setOrganizationName(QStringLiteral("Q"));
-    QApplication::setApplicationName(QStringLiteral("ss-link"));
-    QApplication::setApplicationDisplayName(QStringLiteral("SS-Link"));
-    QApplication::setApplicationVersion(QStringLiteral("0.1"));
-    QApplication::setQuitOnLastWindowClosed(false);
-
-    MainWidget w;
-    QSettings settings;
-
-    if (!settings.value("hideOnStartUp", true).toBool())
-    {
-        w.show();
-    }
-
-    return a.exec();
+namespace Ui {
+class OptionsDialog;
 }
+
+class OptionsDialog : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit OptionsDialog(QWidget *parent = Q_NULLPTR);
+    virtual ~OptionsDialog();
+
+public slots:
+    virtual void accept() Q_DECL_OVERRIDE;
+
+protected:
+    virtual void changeEvent(QEvent *e) Q_DECL_OVERRIDE;
+
+private:
+    Ui::OptionsDialog *ui;
+};
+
+#endif // OPTIONSDIALOG_H

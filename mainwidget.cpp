@@ -24,11 +24,14 @@
 #include "mainwidget.h"
 #include "ui_mainwidget.h"
 
+#include <QCloseEvent>
+#include <QMenu>
 #include <QSettings>
 #include <QSystemTrayIcon>
 #include <QTimer>
 #include <QWebSettings>
 
+#include "optionsdialog.h"
 #include "sslink.h"
 #include "shadowsocksserverlistmodel.h"
 
@@ -52,9 +55,21 @@ MainWidget::MainWidget(QWidget *parent)
     ui->treeView->header()->restoreState(settings.value("viewGeometry").toByteArray());
 
     tray_ = new QSystemTrayIcon(windowIcon(), this);
-    tray_->setToolTip(QApplication::applicationDisplayName());
-    tray_->show();
     connect(tray_, &QSystemTrayIcon::activated, this, &MainWidget::handleTrayActivation);
+    tray_->setToolTip(QApplication::applicationDisplayName());
+
+    QMenu *menu = new QMenu(this);
+    QAction *action = menu->addAction(tr("&Show"), this, SLOT(showUp()));
+    menu->setDefaultAction(action);
+
+    action = menu->addAction(tr("&Options..."), this, SLOT(showOptionsDialog()));
+    action->setMenuRole(QAction::PreferencesRole);
+
+    action = menu->addAction(tr("E&xit"), qApp, SLOT(quit()));
+    action->setMenuRole(QAction::QuitRole);
+
+    tray_->setContextMenu(menu);
+    tray_->show();
 
     QTimer::singleShot(1000, sslink_, SLOT(login()));
 }
@@ -92,10 +107,11 @@ void MainWidget::changeEvent(QEvent *e)
 
 void MainWidget::closeEvent(QCloseEvent *e)
 {
+    e->ignore();
     QSettings settings;
     settings.setValue("geometry", saveGeometry());
     settings.setValue("viewGeometry", ui->treeView->header()->saveState());
-    QWidget::closeEvent(e);
+    setWindowState(windowState() | Qt::WindowMinimized);
 }
 
 
@@ -103,9 +119,22 @@ void MainWidget::handleTrayActivation(QSystemTrayIcon::ActivationReason reason)
 {
     if (reason == QSystemTrayIcon::Trigger)
     {
-        show();
-        raise();
-        activateWindow();
-        setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+        showUp();
     }
+}
+
+
+void MainWidget::showUp()
+{
+    show();
+    raise();
+    activateWindow();
+    setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+}
+
+
+void MainWidget::showOptionsDialog()
+{
+    OptionsDialog dialog(this);
+    dialog.exec();
 }

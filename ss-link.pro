@@ -17,16 +17,19 @@ SOURCES += main.cpp\
     sslink.cpp \
     shadowsocksserverlistmodel.cpp \
     ping.cpp \
-    ssproxy.cpp
+    ssproxy.cpp \
+    optionsdialog.cpp
 
 HEADERS  += mainwidget.h \
     sslink.h \
     shadowsocksserver.h \
     shadowsocksserverlistmodel.h \
     ping.h \
-    ssproxy.h
+    ssproxy.h \
+    optionsdialog.h
 
-FORMS    += mainwidget.ui
+FORMS    += mainwidget.ui \
+    optionsdialog.ui
 
 RESOURCES += \
     shadowsocks.qrc

@@ -191,6 +191,24 @@ void ShadowsocksServerListModel::reset(const ShadowsocksServerList &list)
 }
 
 
+ShadowsocksServer ShadowsocksServerListModel::currentServer() const
+{
+    ShadowsocksServer ss;
+
+    if (current_ < 0)
+    {
+        ss.ping = 0;
+        ss.port = 0;
+    }
+    else
+    {
+        ss = sss_.at(current_);
+    }
+
+    return ss;
+}
+
+
 void ShadowsocksServerListModel::autoSelectServer()
 {
     int minRtt = std::numeric_limits<int>::max();
@@ -223,6 +241,7 @@ void ShadowsocksServerListModel::selectServer(const QModelIndex &index)
             beginResetModel();
             this->current_ = index.row();
             endResetModel();
+            emit currentServerChanged();
         });
 
         proxy_->start();

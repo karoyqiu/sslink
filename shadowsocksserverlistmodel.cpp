@@ -23,6 +23,7 @@
  **************************************************************************************************/
 #include "shadowsocksserverlistmodel.h"
 
+#include <QSettings>
 #include <QTimer>
 
 #include "ping.h"
@@ -235,7 +236,9 @@ void ShadowsocksServerListModel::selectServer(const QModelIndex &index)
     if (index.isValid())
     {
         delete proxy_;
-        proxy_ = new SSProxy(sss_.at(index.row()), true, this);
+        QSettings settings;
+        proxy_ = new SSProxy(sss_.at(index.row()), settings.value("local", true).toBool(), this);
+
         connect(proxy_, &SSProxy::ready, this, [this, index]()
         {
             beginResetModel();

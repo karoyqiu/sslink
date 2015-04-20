@@ -49,6 +49,8 @@ MainWidget::MainWidget(QWidget *parent)
     ui->treeView->setModel(sslink_->serverList());
     connect(ui->treeView, &QTreeView::doubleClicked,
             sslink_->serverList(), &ShadowsocksServerListModel::selectServer);
+    connect(ui->buttonRefresh, &QPushButton::clicked, sslink_, &SSLink::refresh);
+    connect(ui->buttonExit, &QPushButton::clicked, qApp, &QApplication::quit);
 
     QSettings settings;
     restoreGeometry(settings.value("geometry").toByteArray());
@@ -71,7 +73,7 @@ MainWidget::MainWidget(QWidget *parent)
     tray_->setContextMenu(menu);
     tray_->show();
 
-    QTimer::singleShot(1000, sslink_, SLOT(login()));
+    QTimer::singleShot(1000, sslink_, SLOT(refresh()));
 }
 
 

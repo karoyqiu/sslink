@@ -52,13 +52,14 @@ public slots:
     void setUserName(const QString &value);
     void setPassword(const QString &value);
 
-    void login();
+    void refresh();
 
 signals:
     void loggedIn();
     void gotServerList();
 
 private slots:
+    void login();
     void processPage(bool ok);
 
 private:

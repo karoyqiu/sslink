@@ -49,6 +49,8 @@ protected:
 
 private slots:
     void handleTrayActivation(QSystemTrayIcon::ActivationReason reason);
+    void showUp();
+    void showOptionsDialog();
 
 private:
     Ui::MainWidget *ui;

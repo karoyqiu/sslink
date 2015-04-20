@@ -1,13 +1,13 @@
 ﻿/*! ***********************************************************************************************
  *
- * file
- * brief       The  class.
+ * \file        optionsdialog.h
+ * \brief       The OptionsDialog class.
  *
- * version     0.1
- * date        2015/4/15
+ * \version     0.1
+ * \date        2015/4/20
  *
- * author      Roy QIU (karoyqiu@gmail.com)
- * copyright   © 2015 Roy QIU.
+ * \author      Roy QIU (karoyqiu@gmail.com)
+ * \copyright   © 2015 Roy QIU.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation; either version 3 of the
@@ -22,55 +22,31 @@
  *
  **************************************************************************************************/
 #pragma once
-#ifndef SSLINK_H
-#define SSLINK_H
+#ifndef OPTIONSDIALOG_H
+#define OPTIONSDIALOG_H
 
-#include <QObject>
+#include <QDialog>
 
-class QWebPage;
-class ShadowsocksServerListModel;
+namespace Ui {
+class OptionsDialog;
+}
 
-
-class SSLink : public QObject
+class OptionsDialog : public QDialog
 {
     Q_OBJECT
 
-    enum Stage
-    {
-        None,
-        Login,
-        GetFreeAccount
-    };
-
 public:
-    explicit SSLink(QObject *parent = Q_NULLPTR);
-    virtual ~SSLink();
-
-    ShadowsocksServerListModel* serverList() const;
+    explicit OptionsDialog(QWidget *parent = Q_NULLPTR);
+    virtual ~OptionsDialog();
 
 public slots:
-    void setUserName(const QString &value);
-    void setPassword(const QString &value);
+    virtual void accept() Q_DECL_OVERRIDE;
 
-    void refresh();
-
-signals:
-    void loggedIn();
-    void gotServerList();
-
-private slots:
-    void login();
-    void processPage(bool ok);
+protected:
+    virtual void changeEvent(QEvent *e) Q_DECL_OVERRIDE;
 
 private:
-    void submitLoginForm();
-    void parseFreeAccounts();
-
-private:
-    QWebPage *page_;
-    Stage stage_;
-    ShadowsocksServerListModel *model_;
+    Ui::OptionsDialog *ui;
 };
 
-
-#endif // SSLINK_H
+#endif // OPTIONSDIALOG_H

@@ -24,6 +24,7 @@
 #include "sslink.h"
 
 #include <QtDebug>
+#include <QAction>
 #include <QSettings>
 #include <QWebElement>
 #include <QWebFrame>
@@ -77,6 +78,21 @@ void SSLink::setPassword(const QString &value)
 {
     QSettings settings;
     settings.setValue(QStringLiteral("password"), qCompress(value.toUtf8()));
+}
+
+
+void SSLink::refresh()
+{
+    switch (stage_)
+    {
+    case None:
+        login();
+        break;
+
+    default:
+        page_->action(QWebPage::Reload)->trigger();
+        break;
+    }
 }
 
 
@@ -203,7 +219,6 @@ void SSLink::parseFreeAccounts()
     }
 
     model_->reset(list);
-    stage_ = None;
     qDebug() << "Done.";
     emit gotServerList();
 }

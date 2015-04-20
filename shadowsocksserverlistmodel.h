@@ -63,10 +63,14 @@ public:
     void removeAt(int index);
     void setAt(int index, const ShadowsocksServer &server);
     void reset(const ShadowsocksServerList &list);
+    ShadowsocksServer currentServer() const;
 
 public slots:
     void autoSelectServer();
     void selectServer(const QModelIndex &index);
+
+signals:
+    void currentServerChanged();
 
 private slots:
     void updatePing(int rtt);

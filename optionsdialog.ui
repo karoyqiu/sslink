@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>290</width>
-    <height>201</height>
+    <width>271</width>
+    <height>343</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -54,22 +54,120 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupOptions">
+    <widget class="QGroupBox" name="groupSocks">
      <property name="title">
-      <string>Options</string>
+      <string>SOCKS5 Proxy</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelSocksPort">
+        <property name="text">
+         <string>P&amp;ort:</string>
+        </property>
+        <property name="buddy">
+         <cstring>spinSocksPort</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="spinSocksPort">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>65535</number>
+        </property>
+        <property name="value">
+         <number>1080</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupHttp">
+     <property name="title">
+      <string>HTTP Proxy</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_3">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelHttpProxy">
+        <property name="text">
+         <string>P&amp;rogram:</string>
+        </property>
+        <property name="buddy">
+         <cstring>comboHttpProxy</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="comboHttpProxy">
+        <item>
+         <property name="text">
+          <string>None</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">Polipo</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">COW</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">MEOW</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelHttpPort">
+        <property name="text">
+         <string>Por&amp;t:</string>
+        </property>
+        <property name="buddy">
+         <cstring>spinHttpPort</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="spinHttpPort">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>65535</number>
+        </property>
+        <property name="value">
+         <number>8123</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="checkGlobal">
+        <property name="text">
+         <string>A&amp;llow connections from LAN</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupMisc">
+     <property name="title">
+      <string>Misc</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QCheckBox" name="checkAutorun">
         <property name="text">
          <string>&amp;Autostart</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkGlobal">
-        <property name="text">
-         <string>&amp;Allow connections from LAN</string>
         </property>
        </widget>
       </item>
@@ -88,6 +186,15 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>editEmail</tabstop>
+  <tabstop>editPassword</tabstop>
+  <tabstop>spinSocksPort</tabstop>
+  <tabstop>comboHttpProxy</tabstop>
+  <tabstop>spinHttpPort</tabstop>
+  <tabstop>checkGlobal</tabstop>
+  <tabstop>checkAutorun</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

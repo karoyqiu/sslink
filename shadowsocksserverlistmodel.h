@@ -29,6 +29,7 @@
 
 #include "shadowsocksserver.h"
 
+class AbstractHttpProxy;
 class SSProxy;
 class QTimer;
 
@@ -79,7 +80,8 @@ private:
     ShadowsocksServerList sss_;
     QObjectList pingers_;
     int current_;
-    SSProxy *proxy_;
+    SSProxy *ssproxy_;
+    AbstractHttpProxy *httpProxy_;
     QTimer *autoTimer_;
 };
 

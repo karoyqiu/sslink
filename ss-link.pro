@@ -13,12 +13,16 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwidget.cpp \
+    mainwidget.cpp \
     sslink.cpp \
     shadowsocksserverlistmodel.cpp \
     ping.cpp \
     ssproxy.cpp \
-    optionsdialog.cpp
+    optionsdialog.cpp \
+    abstracthttpproxy.cpp \
+    polipo.cpp \
+    cow.cpp \
+    meow.cpp
 
 HEADERS  += mainwidget.h \
     sslink.h \
@@ -26,7 +30,11 @@ HEADERS  += mainwidget.h \
     shadowsocksserverlistmodel.h \
     ping.h \
     ssproxy.h \
-    optionsdialog.h
+    optionsdialog.h \
+    abstracthttpproxy.h \
+    polipo.h \
+    cow.h \
+    meow.h
 
 FORMS    += mainwidget.ui \
     optionsdialog.ui
@@ -35,4 +43,4 @@ RESOURCES += \
     shadowsocks.qrc
 
 RC_ICONS = res/shadowsocks.ico
-VERSION = 0.2
+VERSION = 0.3

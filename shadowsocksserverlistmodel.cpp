@@ -28,12 +28,16 @@
 
 #include "ping.h"
 #include "ssproxy.h"
+#include "polipo.h"
+#include "cow.h"
+#include "meow.h"
 
 
 ShadowsocksServerListModel::ShadowsocksServerListModel(QObject *parent)
     : QAbstractListModel(parent)
     , current_(-1)
-    , proxy_(Q_NULLPTR)
+    , ssproxy_(Q_NULLPTR)
+    , httpProxy_(Q_NULLPTR)
     , autoTimer_(Q_NULLPTR)
 {
     autoTimer_ = new QTimer(this);
@@ -235,19 +239,49 @@ void ShadowsocksServerListModel::selectServer(const QModelIndex &index)
 {
     if (index.isValid())
     {
-        delete proxy_;
+        delete ssproxy_;
+        ssproxy_ = new SSProxy(sss_.at(index.row()), this);
+
         QSettings settings;
-        proxy_ = new SSProxy(sss_.at(index.row()), settings.value("local", true).toBool(), this);
 
-        connect(proxy_, &SSProxy::ready, this, [this, index]()
+        switch (settings.value("httpProxy/index", 1).toInt())
         {
-            beginResetModel();
-            this->current_ = index.row();
-            endResetModel();
-            emit currentServerChanged();
-        });
+        case 1:
+            httpProxy_ = new Polipo(ssproxy_);
+            break;
+        case 2:
+            httpProxy_ = new Cow(ssproxy_);
+            break;
+        case 3:
+            httpProxy_ = new Meow(ssproxy_);
+            break;
+        default:
+            httpProxy_ = Q_NULLPTR;
+            break;
+        }
 
-        proxy_->start();
+        if (httpProxy_)
+        {
+            connect(httpProxy_, &AbstractHttpProxy::ready, this, [this, index]()
+            {
+                beginResetModel();
+                this->current_ = index.row();
+                endResetModel();
+                emit currentServerChanged();
+            });
+        }
+        else
+        {
+            connect(ssproxy_, &SSProxy::ready, this, [this, index]()
+            {
+                beginResetModel();
+                this->current_ = index.row();
+                endResetModel();
+                emit currentServerChanged();
+            });
+        }
+
+        ssproxy_->start();
     }
 }
 

@@ -13,7 +13,7 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwidget.cpp \
+    mainwidget.cpp \
     sslink.cpp \
     shadowsocksserverlistmodel.cpp \
     ping.cpp \
@@ -43,4 +43,4 @@ RESOURCES += \
     shadowsocks.qrc
 
 RC_ICONS = res/shadowsocks.ico
-VERSION = 0.2
+VERSION = 0.3

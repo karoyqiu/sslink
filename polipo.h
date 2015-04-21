@@ -1,4 +1,4 @@
-/*! ***********************************************************************************************
+﻿/*! ***********************************************************************************************
  *
  * file
  * brief       The  class.
@@ -22,22 +22,30 @@
  *
  **************************************************************************************************/
 #pragma once
-
 #ifndef POLIPO_H
 #define POLIPO_H
 
-#include <QObject>
+#include "abstracthttpproxy.h"
 
-class Polipo : public QObject
+class QProcess;
+
+
+class Polipo : public AbstractHttpProxy
 {
     Q_OBJECT
-public:
-    explicit Polipo(QObject *parent = 0);
-    ~Polipo();
 
-signals:
+public:
+    explicit Polipo(SSProxy *parent);
+    virtual ~Polipo();
 
 public slots:
+    // AbstractHttpProxy interface
+    virtual void start() Q_DECL_OVERRIDE;
+    virtual void stop() Q_DECL_OVERRIDE;
+
+private:
+    QProcess *proc_;
 };
+
 
 #endif // POLIPO_H

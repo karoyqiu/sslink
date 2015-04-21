@@ -33,11 +33,12 @@
 class SSProxy : public QObject
 {
     Q_OBJECT
-    Q_DISABLE_COPY(SSProxy)
 
 public:
-    explicit SSProxy(const ShadowsocksServer &server, bool local = true, QObject *parent = Q_NULLPTR);
+    explicit SSProxy(const ShadowsocksServer &server, QObject *parent = Q_NULLPTR);
     virtual ~SSProxy();
+
+    int localPort() const;
 
 public slots:
     void start();
@@ -46,12 +47,7 @@ signals:
     void ready();
 
 private:
-    void startSslocal();
-    void startPolipo(QObject *sslocal);
-
-private:
     const ShadowsocksServer server_;
-    bool local_;
 };
 
 

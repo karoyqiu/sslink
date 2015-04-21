@@ -28,12 +28,14 @@
 
 #include "ping.h"
 #include "ssproxy.h"
+#include "polipo.h"
 
 
 ShadowsocksServerListModel::ShadowsocksServerListModel(QObject *parent)
     : QAbstractListModel(parent)
     , current_(-1)
-    , proxy_(Q_NULLPTR)
+    , ssproxy_(Q_NULLPTR)
+    , httpProxy_(Q_NULLPTR)
     , autoTimer_(Q_NULLPTR)
 {
     autoTimer_ = new QTimer(this);
@@ -235,11 +237,11 @@ void ShadowsocksServerListModel::selectServer(const QModelIndex &index)
 {
     if (index.isValid())
     {
-        delete proxy_;
-        QSettings settings;
-        proxy_ = new SSProxy(sss_.at(index.row()), settings.value("local", true).toBool(), this);
+        delete ssproxy_;
+        ssproxy_ = new SSProxy(sss_.at(index.row()), this);
+        httpProxy_ = new Polipo(ssproxy_);
 
-        connect(proxy_, &SSProxy::ready, this, [this, index]()
+        connect(httpProxy_, &AbstractHttpProxy::ready, this, [this, index]()
         {
             beginResetModel();
             this->current_ = index.row();
@@ -247,7 +249,7 @@ void ShadowsocksServerListModel::selectServer(const QModelIndex &index)
             emit currentServerChanged();
         });
 
-        proxy_->start();
+        ssproxy_->start();
     }
 }
 

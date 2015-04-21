@@ -33,10 +33,9 @@
 #include <QTextStream>
 
 
-SSProxy::SSProxy(const ShadowsocksServer &server, bool local, QObject *parent)
+SSProxy::SSProxy(const ShadowsocksServer &server, QObject *parent)
     : QObject(parent)
     , server_(server)
-    , local_(local)
 {
 }
 
@@ -46,13 +45,14 @@ SSProxy::~SSProxy()
 }
 
 
-void SSProxy::start()
+int SSProxy::localPort() const
 {
-    startSslocal();
+    QSettings settings;
+    return settings.value("sslocal/localPort", 1080).toInt();
 }
 
 
-void SSProxy::startSslocal()
+void SSProxy::start()
 {
     QTemporaryFile *config = new QTemporaryFile(QDir::tempPath() + "/ssconfig-XXXXXX.json", this);
 
@@ -71,7 +71,7 @@ void SSProxy::startSslocal()
     json.insert("local_port", settings.value("localPort", 1080).toInt());
     json.insert("password", server_.password);
     json.insert("method", server_.method);
-    json.insert("timeout", settings.value("timeout", 600).toInt());
+    json.insert("timeout", settings.value("timeout", 60).toInt());
 
     QJsonDocument doc(json);
     config->write(doc.toJson());
@@ -83,56 +83,11 @@ void SSProxy::startSslocal()
     {
         if (state == QProcess::Running)
         {
-            startPolipo(sslocal);
-        }
-    });
-
-    QStringList args;
-    args << "-c" << QDir::toNativeSeparators(config->fileName());
-    sslocal->start(settings.value("sslocal", "sslocal").toString(), args);
-}
-
-
-void SSProxy::startPolipo(QObject *sslocal)
-{
-    QTemporaryFile *config = new QTemporaryFile(QDir::tempPath() + "/polipo-XXXXXX.conf", sslocal);
-
-    if (Q_UNLIKELY(!config->open()))
-    {
-        qCritical() << "Failed to open temporary file.";
-        return;
-    }
-
-    QTextStream s(config);
-    QSettings settings;
-
-    if (local_)
-    {
-        s << "proxyAddress = \"127.0.0.1\"" << endl;
-    }
-    else
-    {
-        s << "proxyAddress = \"0.0.0.0\"" << endl;
-    }
-
-    s << "proxyPort = " << settings.value("polipo/port", 8123).toInt() << endl;
-    s << "socksParentProxy = \"127.0.0.1:" << settings.value("sslocal/localPort", 1080).toInt() << "\"" << endl;
-    s << "socksProxyType = socks5" << endl;
-    s << "diskCacheRoot = \"\"" << endl;
-    s << "localDocumentRoot = \"\"" << endl;
-    s << "allowedPorts = 1-65535" << endl;
-    s << "tunnelAllowedPorts = 1-65535" << endl;
-
-    QProcess *polipo = new QProcess(sslocal);
-    connect(polipo, &QProcess::stateChanged, this, [this](QProcess::ProcessState state)
-    {
-        if (state == QProcess::Running)
-        {
             emit ready();
         }
     });
 
     QStringList args;
     args << "-c" << QDir::toNativeSeparators(config->fileName());
-    polipo->start(settings.value("polipo/polipo", "polipo").toString(), args);
+    sslocal->start(settings.value("sslocal", "sslocal").toString(), args);
 }

@@ -1,4 +1,4 @@
-/*! ***********************************************************************************************
+﻿/*! ***********************************************************************************************
  *
  * file
  * brief       The  class.
@@ -21,17 +21,60 @@
  * email to karoyqiu@gmail.com.
  *
  **************************************************************************************************/
-#pragma once
-
 #include "abstracthttpproxy.h"
+#include "ssproxy.h"
 
-AbstractHttpProxy::AbstractHttpProxy(QObject *parent) : QObject(parent)
+#include <QSettings>
+
+
+AbstractHttpProxy::AbstractHttpProxy(SSProxy *parent)
+    : QObject(parent)
+    , parent_(parent)
+    , local_(true)
+    , port_(8123)
 {
+    Q_ASSERT(parent);
+    connect(parent, &SSProxy::ready, this, &AbstractHttpProxy::start);
 
+    QSettings settings;
+    settings.beginGroup("httpProxy");
+    local_ = settings.value("localOnly", true).toBool();
+    port_ = settings.value("port", 8123).toInt();
 }
+
 
 AbstractHttpProxy::~AbstractHttpProxy()
 {
-
 }
 
+
+void AbstractHttpProxy::setLocalOnly(bool value)
+{
+    if (local_ != value)
+    {
+        local_ = value;
+        emit localOnlyChanged(value);
+    }
+}
+
+
+bool AbstractHttpProxy::localOnly() const
+{
+    return local_;
+}
+
+
+void AbstractHttpProxy::setPort(int value)
+{
+    if (port_ != value)
+    {
+        port_ = value;
+        emit portChanged(value);
+    }
+}
+
+
+int AbstractHttpProxy::port() const
+{
+    return port_;
+}

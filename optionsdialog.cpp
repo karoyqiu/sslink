@@ -39,7 +39,10 @@ OptionsDialog::OptionsDialog(QWidget *parent)
     QSettings settings;
     ui->editEmail->setText(settings.value("email").toString());
     ui->editPassword->setText("xXxXxXx");
-    ui->checkGlobal->setChecked(!settings.value("local", true).toBool());
+    ui->spinSocksPort->setValue(settings.value("sslocal/localPort", 1080).toInt());
+    ui->comboHttpProxy->setCurrentIndex(settings.value("httpProxy/index", 1).toInt());
+    ui->spinHttpPort->setValue(settings.value("httpProxy/port", 8123).toInt());
+    ui->checkGlobal->setChecked(!settings.value("httpProxy/localOnly", true).toBool());
 
     QSettings run("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
                   QSettings::NativeFormat);
@@ -93,7 +96,10 @@ void OptionsDialog::accept()
         settings.setValue("password", qCompress(ui->editPassword->text().toUtf8()));
     }
 
-    settings.setValue("local", !ui->checkGlobal->isChecked());
+    settings.setValue("sslocal/localPort", ui->spinSocksPort->value());
+    settings.setValue("httpProxy/index", ui->comboHttpProxy->currentIndex());
+    settings.setValue("httpProxy/port", ui->spinHttpPort->value());
+    settings.setValue("httpProxy/localOnly", !ui->checkGlobal->isChecked());
 
     QSettings run("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
                   QSettings::NativeFormat);

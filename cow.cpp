@@ -86,11 +86,6 @@ void Cow::start()
         }
     });
 
-    connect(proc_, &QProcess::readyRead, this, [this]()
-    {
-        qDebug() << proc_->readAll();
-    });
-
     QStringList args;
     args << "-rc=" + QDir::toNativeSeparators(config->fileName());
     proc_->start(program_, args);

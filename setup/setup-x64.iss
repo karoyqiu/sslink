@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "SS-Link"
-#define MyAppVersion "0.2"
+#define MyAppVersion "0.3"
 #define MyAppPublisher "Q"
 #define MyAppExeName "ss-link.exe"
 
@@ -38,8 +38,11 @@ Name: "autorun"; Description: "{cm:AutoStartProgram,{#MyAppName}}"; GroupDescrip
 
 [Files]
 Source: "..\..\build-ss-link\release\ss-link.exe"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\polipo-win32.exe"; DestDir: "{app}"; DestName: "polipo.exe"; Flags: ignoreversion restartreplace uninsrestartdelete
-Source: "..\3rdparty\shadowsocks-libqss-win64.exe"; DestDir: "{app}"; DestName: "sslocal.exe"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\shadowsocks\shadowsocks-libqss-win64.exe"; DestDir: "{app}"; DestName: "sslocal.exe"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\polipo\polipo-win32.exe"; DestDir: "{app}"; DestName: "polipo.exe"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\cow\cow-x64.exe"; DestDir: "{app}"; DestName: "cow.exe"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\MEOW\MEOW-x64.exe"; DestDir: "{app}"; DestName: "MEOW.exe"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\MEOW\direct.txt"; DestDir: "{app}"
 Source: "..\3rdparty\Qt\D3Dcompiler_47.dll"; DestDir: "{app}\Qt\"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\Qt\icudt53.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\Qt\icuin53.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
@@ -95,12 +98,15 @@ Source: "..\3rdparty\Qt\sqldrivers\qsqlite.dll"; DestDir: "{app}\sqldrivers\"; F
 Source: "..\3rdparty\Qt\sqldrivers\qsqlmysql.dll"; DestDir: "{app}\sqldrivers\"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\Qt\sqldrivers\qsqlodbc.dll"; DestDir: "{app}\sqldrivers\"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\Qt\sqldrivers\qsqlpsql.dll"; DestDir: "{app}\sqldrivers\"; Flags: restartreplace uninsrestartdelete
-         
+
 [Registry]
 Root: "HKCU"; Subkey: "Software\Q\ss-link"; ValueType: string; ValueName: "email"; ValueData: "karoyqiu@qq.com"; Flags: uninsdeletekeyifempty
 Root: "HKCU"; Subkey: "Software\Q\ss-link"; ValueType: binary; ValueName: "password"; ValueData: "40 00 42 00 79 00 74 00 65 00 41 00 72 00 72 00 61 00 79 00 28 00 00 00 00 00 00 00 0c 00 78 00 9c 00 cb 00 cc 00 c9 00 2f 00 4b 00 cd 00 c8 00 cf 00 4b 00 cf 00 c9 00 cc 00 03 00 00 00 20 00 f8 00 05 00 0f 00 29 00"; Flags: uninsdeletekeyifempty
-Root: "HKCU"; Subkey: "Software\Q\ss-link\polipo"; ValueType: string; ValueName: "polipo"; ValueData: "{app}\polipo.exe"; Flags: uninsdeletekeyifempty
 Root: "HKCU"; Subkey: "Software\Q\ss-link\sslocal"; ValueType: string; ValueName: "sslocal"; ValueData: "{app}\sslocal.exe"; Flags: uninsdeletekeyifempty
+Root: "HKCU"; Subkey: "Software\Q\ss-link\httpProxy"; ValueType: string; ValueName: "polipo"; ValueData: "{app}\polipo.exe"; Flags: uninsdeletekeyifempty
+Root: "HKCU"; Subkey: "Software\Q\ss-link\httpProxy"; ValueType: string; ValueName: "cow"; ValueData: "{app}\cow.exe"; Flags: uninsdeletekeyifempty
+Root: "HKCU"; Subkey: "Software\Q\ss-link\httpProxy"; ValueType: string; ValueName: "meow"; ValueData: "{app}\MEOW.exe"; Flags: uninsdeletekeyifempty
+Root: "HKCU"; Subkey: "Software\Q\ss-link\httpProxy"; ValueType: dword; ValueName: "index"; ValueData: "3"; Flags: uninsdeletekeyifempty
 Root: "HKCU"; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "SS-Link"; ValueData: "{app}\ss-link.exe"; Flags: uninsdeletevalue; Tasks: autorun
 
 [Icons]

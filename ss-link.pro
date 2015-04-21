@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     ssproxy.cpp \
     optionsdialog.cpp \
     abstracthttpproxy.cpp \
-    polipo.cpp
+    polipo.cpp \
+    cow.cpp \
+    meow.cpp
 
 HEADERS  += mainwidget.h \
     sslink.h \
@@ -30,7 +32,9 @@ HEADERS  += mainwidget.h \
     ssproxy.h \
     optionsdialog.h \
     abstracthttpproxy.h \
-    polipo.h
+    polipo.h \
+    cow.h \
+    meow.h
 
 FORMS    += mainwidget.ui \
     optionsdialog.ui

@@ -25,7 +25,7 @@
 #include "ssproxy.h"
 
 #include <QSettings>
-
+#include <QTimer>
 
 AbstractHttpProxy::AbstractHttpProxy(SSProxy *parent)
     : QObject(parent)
@@ -34,7 +34,12 @@ AbstractHttpProxy::AbstractHttpProxy(SSProxy *parent)
     , port_(8123)
 {
     Q_ASSERT(parent);
-    connect(parent, &SSProxy::ready, this, &AbstractHttpProxy::start);
+
+    QTimer *delay = new QTimer(this);
+    delay->setInterval(1000);
+    delay->setSingleShot(true);
+    connect(delay, &QTimer::timeout, this, &AbstractHttpProxy::start);
+    connect(parent, SIGNAL(ready()), delay, SLOT(start()));
 
     QSettings settings;
     settings.beginGroup("httpProxy");

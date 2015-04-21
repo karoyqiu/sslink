@@ -29,6 +29,8 @@
 #include "ping.h"
 #include "ssproxy.h"
 #include "polipo.h"
+#include "cow.h"
+#include "meow.h"
 
 
 ShadowsocksServerListModel::ShadowsocksServerListModel(QObject *parent)
@@ -239,15 +241,45 @@ void ShadowsocksServerListModel::selectServer(const QModelIndex &index)
     {
         delete ssproxy_;
         ssproxy_ = new SSProxy(sss_.at(index.row()), this);
-        httpProxy_ = new Polipo(ssproxy_);
 
-        connect(httpProxy_, &AbstractHttpProxy::ready, this, [this, index]()
+        QSettings settings;
+
+        switch (settings.value("httpProxy/index", 1).toInt())
         {
-            beginResetModel();
-            this->current_ = index.row();
-            endResetModel();
-            emit currentServerChanged();
-        });
+        case 1:
+            httpProxy_ = new Polipo(ssproxy_);
+            break;
+        case 2:
+            httpProxy_ = new Cow(ssproxy_);
+            break;
+        case 3:
+            httpProxy_ = new Meow(ssproxy_);
+            break;
+        default:
+            httpProxy_ = Q_NULLPTR;
+            break;
+        }
+
+        if (httpProxy_)
+        {
+            connect(httpProxy_, &AbstractHttpProxy::ready, this, [this, index]()
+            {
+                beginResetModel();
+                this->current_ = index.row();
+                endResetModel();
+                emit currentServerChanged();
+            });
+        }
+        else
+        {
+            connect(ssproxy_, &SSProxy::ready, this, [this, index]()
+            {
+                beginResetModel();
+                this->current_ = index.row();
+                endResetModel();
+                emit currentServerChanged();
+            });
+        }
 
         ssproxy_->start();
     }

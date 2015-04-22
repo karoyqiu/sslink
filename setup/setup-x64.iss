@@ -33,6 +33,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 
 [Tasks]
+Name: "vcredist"; Description: "{cm:InstallVCRedist}"; GroupDescription: "{cm:InstallDependentGroupDescription}"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "autorun"; Description: "{cm:AutoStartProgram,{#MyAppName}}"; GroupDescription: "{cm:AutoStartProgramGroupDescription}"
 
@@ -98,6 +99,7 @@ Source: "..\3rdparty\Qt\sqldrivers\qsqlite.dll"; DestDir: "{app}\sqldrivers\"; F
 Source: "..\3rdparty\Qt\sqldrivers\qsqlmysql.dll"; DestDir: "{app}\sqldrivers\"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\Qt\sqldrivers\qsqlodbc.dll"; DestDir: "{app}\sqldrivers\"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\Qt\sqldrivers\qsqlpsql.dll"; DestDir: "{app}\sqldrivers\"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\vcredist\vcredist_x64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall; Tasks: vcredist
 
 [Registry]
 Root: "HKCU"; Subkey: "Software\Q\ss-link"; ValueType: string; ValueName: "email"; ValueData: "karoyqiu@qq.com"; Flags: uninsdeletekeyifempty
@@ -115,7 +117,14 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall skipifsilent; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
+Filename: "{tmp}\vcredist_x64.exe"; Parameters: "/quiet /norestart"; Flags: runhidden; Tasks: vcredist
 
 [ThirdParty]
 UseRelativePaths=True
+
+[CustomMessages]
+english.InstallVCRedist=Install Microsoft Visual C++ 2013 Redistributable Package
+chinesesimplified.InstallVCRedist=安装 Microsoft Visual C++ 2013 可再发行组件包
+english.InstallDependentGroupDescription=Install dependent component
+chinesesimplified.InstallDependentGroupDescription=安装依赖组件

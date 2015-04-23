@@ -24,8 +24,11 @@
 #include "mainwidget.h"
 #include "ui_mainwidget.h"
 
+#include <QtDebug>
 #include <QCloseEvent>
 #include <QMenu>
+#include <QMessageBox>
+#include <QProcess>
 #include <QSettings>
 #include <QSystemTrayIcon>
 #include <QTimer>
@@ -66,6 +69,9 @@ MainWidget::MainWidget(QWidget *parent)
 
     action = menu->addAction(tr("&Options..."), this, SLOT(showOptionsDialog()));
     action->setMenuRole(QAction::PreferencesRole);
+
+    menu->addSeparator();
+    menu->addAction(tr("&Restart"), this, SLOT(restartApp()));
 
     action = menu->addAction(tr("E&xit"), qApp, SLOT(quit()));
     action->setMenuRole(QAction::QuitRole);
@@ -139,4 +145,17 @@ void MainWidget::showOptionsDialog()
 {
     OptionsDialog dialog(this);
     dialog.exec();
+}
+
+
+void MainWidget::restartApp()
+{
+    if (QProcess::startDetached(QApplication::applicationFilePath(), QStringList()))
+    {
+        QApplication::quit();
+    }
+    else
+    {
+        QMessageBox::critical(this, tr("Error"), tr("Failed to restart ss-link."));
+    }
 }

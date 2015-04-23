@@ -51,6 +51,7 @@ private slots:
     void handleTrayActivation(QSystemTrayIcon::ActivationReason reason);
     void showUp();
     void showOptionsDialog();
+    void restartApp();
 
 private:
     Ui::MainWidget *ui;

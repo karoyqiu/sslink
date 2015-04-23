@@ -38,7 +38,6 @@ public:
 
 public slots:
     void ping(const QString &dest);
-    void setRequestSize(int size);
     void setTimeout(int timeout);
 
 signals:
@@ -48,7 +47,6 @@ private slots:
     void finish();
 
 private:
-    int size_;
     int timeout_;
 };
 

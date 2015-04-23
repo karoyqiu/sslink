@@ -24,6 +24,7 @@
 #include "ping.h"
 
 #include <QtConcurrent>
+#include <QThread>
 
 #ifdef Q_OS_WIN
 #include <sdkddkver.h>
@@ -35,33 +36,37 @@
 #pragma comment(lib, "iphlpapi.lib")
 #pragma comment(lib, "ws2_32.lib")
 
-static int pingImpl(const QString &host, int requestSize, int timeout)
+static int pingImpl(const QString &host, int count, int timeout)
 {
-    Q_UNUSED(requestSize)
-
     char sendData[32] = "Data buffer.";
     DWORD dwReplySize = sizeof(ICMP_ECHO_REPLY) + sizeof(sendData);
     LPVOID pvReplyBuffer = malloc(dwReplySize);
     HANDLE hIcmp = IcmpCreateFile();
+    int total = 0;
 
-    DWORD dwRet = IcmpSendEcho(hIcmp, inet_addr(host.toLocal8Bit().constData()),
-                               sendData, sizeof(sendData), NULL, pvReplyBuffer, dwReplySize, timeout);
+    for (int i = 0; i < count; i++)
+    {
+        DWORD dwRet = IcmpSendEcho(hIcmp, inet_addr(host.toLocal8Bit().constData()),
+                                   sendData, sizeof(sendData), NULL, pvReplyBuffer, dwReplySize, timeout);
 
-    if (dwRet != 0)
-    {
-        PICMP_ECHO_REPLY lpReply = (PICMP_ECHO_REPLY)pvReplyBuffer;
-        qDebug() << "Ret" << dwRet << "rtt" << lpReply->RoundTripTime << "status" << lpReply->Status;
-        dwRet = lpReply->RoundTripTime;
-    }
-    else
-    {
-        qDebug() << "Ret" << dwRet << GetLastError();
-        dwRet = std::numeric_limits<int>::max();
+        if (dwRet != 0)
+        {
+            PICMP_ECHO_REPLY lpReply = (PICMP_ECHO_REPLY)pvReplyBuffer;
+            qDebug() << "Ping" << host << lpReply->RoundTripTime;
+            total += lpReply->RoundTripTime;
+        }
+        else
+        {
+            qDebug() << "Ping" << host << "timeout";
+            total += std::numeric_limits<int>::max() / count;
+        }
+
+        QThread::currentThread()->msleep(timeout / count);
     }
 
     free(pvReplyBuffer);
     IcmpCloseHandle(hIcmp);
-    return dwRet;
+    return total / count;
 }
 
 #endif
@@ -69,8 +74,7 @@ static int pingImpl(const QString &host, int requestSize, int timeout)
 
 Ping::Ping(QObject *parent)
     : QObject(parent)
-    , size_(32)
-    , timeout_(5000)
+    , timeout_(3000)
 {
 }
 
@@ -84,13 +88,7 @@ void Ping::ping(const QString &dest)
 {
     QFutureWatcher<int> *watcher = new QFutureWatcher<int>(this);
     connect(watcher, SIGNAL(finished()), this, SLOT(finish()));
-    watcher->setFuture(QtConcurrent::run(pingImpl, dest, size_, timeout_));
-}
-
-
-void Ping::setRequestSize(int size)
-{
-    size_ = size;
+    watcher->setFuture(QtConcurrent::run(pingImpl, dest, 4, timeout_));
 }
 
 

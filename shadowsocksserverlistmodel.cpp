@@ -41,7 +41,7 @@ ShadowsocksServerListModel::ShadowsocksServerListModel(QObject *parent)
     , autoTimer_(Q_NULLPTR)
 {
     autoTimer_ = new QTimer(this);
-    autoTimer_->setInterval(1000);
+    autoTimer_->setInterval(4000);
     autoTimer_->setSingleShot(true);
     connect(autoTimer_, &QTimer::timeout, this, &ShadowsocksServerListModel::autoSelectServer);
 }

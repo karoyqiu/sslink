@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/images">
-        <file alias="shadowsocks">res/shadowsocks.ico</file>
-        <file alias="ss24">res/ss24.png</file>
-        <file alias="ss128">res/ssw128.png</file>
-    </qresource>
-</RCC>

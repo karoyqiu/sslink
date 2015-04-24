@@ -22,16 +22,17 @@
  *
  **************************************************************************************************/
 #pragma once
-#ifndef SSLINK_H
-#define SSLINK_H
+#ifndef SSSPIDER_H
+#define SSSPIDER_H
 
 #include <QObject>
+#include "shadowsocksserver.h"
 
 class QWebPage;
 class ShadowsocksServerListModel;
 
 
-class SSLink : public QObject
+class SSSpider : public QObject
 {
     Q_OBJECT
 
@@ -43,10 +44,10 @@ class SSLink : public QObject
     };
 
 public:
-    explicit SSLink(QObject *parent = Q_NULLPTR);
-    virtual ~SSLink();
+    explicit SSSpider(QObject *parent = Q_NULLPTR);
+    virtual ~SSSpider();
 
-    ShadowsocksServerListModel* serverList() const;
+    ShadowsocksServerList serverList() const;
 
 public slots:
     void setUserName(const QString &value);
@@ -69,8 +70,8 @@ private:
 private:
     QWebPage *page_;
     Stage stage_;
-    ShadowsocksServerListModel *model_;
+    ShadowsocksServerList servers_;
 };
 
 
-#endif // SSLINK_H
+#endif // SSSPIDER_H

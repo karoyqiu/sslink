@@ -1,46 +1,23 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2015-04-15T19:29:18
+# Project created by QtCreator 2015-04-24T20:20:36
 #
 #-------------------------------------------------
 
-QT       += core gui concurrent webkitwidgets
+QT       += core gui webkitwidgets
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+TARGET = ssspider
+CONFIG   += console
+CONFIG   -= app_bundle
 
-TARGET = ss-link
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-    mainwidget.cpp \
-    shadowsocksserverlistmodel.cpp \
-    ping.cpp \
-    ssproxy.cpp \
-    optionsdialog.cpp \
-    abstracthttpproxy.cpp \
-    polipo.cpp \
-    cow.cpp \
-    meow.cpp
+SOURCES += main.cpp \
+    ssspider.cpp
 
-HEADERS  += mainwidget.h \
-    shadowsocksserverlistmodel.h \
-    ping.h \
-    ssproxy.h \
-    optionsdialog.h \
-    abstracthttpproxy.h \
-    polipo.h \
-    cow.h \
-    meow.h
-
-FORMS    += mainwidget.ui \
-    optionsdialog.ui
-
-RESOURCES += \
-    shadowsocks.qrc
-
-RC_ICONS = res/shadowsocks.ico
-VERSION = 0.3
+HEADERS += \
+    ssspider.h
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../shadowsocksserver/release/ -lshadowsocksserver
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../shadowsocksserver/debug/ -lshadowsocksserver

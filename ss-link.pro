@@ -7,4 +7,5 @@
 TEMPLATE = subdirs
 
 SUBDIRS += ss-link \
-    shadowsocksserver
+    shadowsocksserver \
+    ssspider

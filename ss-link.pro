@@ -6,6 +6,6 @@
 
 TEMPLATE = subdirs
 
-SUBDIRS += ss-link \
-    shadowsocksserver \
-    ssspider
+SUBDIRS += shadowsocksserver \
+    ssspider \
+    ss-link

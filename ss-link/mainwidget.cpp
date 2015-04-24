@@ -26,33 +26,31 @@
 
 #include <QtDebug>
 #include <QCloseEvent>
+#include <QJsonDocument>
 #include <QMenu>
 #include <QMessageBox>
 #include <QProcess>
 #include <QSettings>
 #include <QSystemTrayIcon>
 #include <QTimer>
-#include <QWebSettings>
 
 #include "optionsdialog.h"
-#include "sslink.h"
 #include "shadowsocksserverlistmodel.h"
 
 
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MainWidget)
-    , sslink_(Q_NULLPTR)
+    , model_(Q_NULLPTR)
     , tray_(Q_NULLPTR)
 {
-    QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-
     ui->setupUi(this);
-    sslink_ = new SSLink(this);
-    ui->treeView->setModel(sslink_->serverList());
+
+    model_ = new ShadowsocksServerListModel(this);
+    ui->treeView->setModel(model_);
     connect(ui->treeView, &QTreeView::doubleClicked,
-            sslink_->serverList(), &ShadowsocksServerListModel::selectServer);
-    connect(ui->buttonRefresh, &QPushButton::clicked, sslink_, &SSLink::refresh);
+            model_, &ShadowsocksServerListModel::selectServer);
+    connect(ui->buttonRefresh, &QPushButton::clicked, this, &MainWidget::refresh);
     connect(ui->buttonExit, &QPushButton::clicked, qApp, &QApplication::quit);
 
     QSettings settings;
@@ -79,7 +77,7 @@ MainWidget::MainWidget(QWidget *parent)
     tray_->setContextMenu(menu);
     tray_->show();
 
-    QTimer::singleShot(1000, sslink_, SLOT(refresh()));
+    QTimer::singleShot(1000, this, SLOT(refresh()));
 }
 
 
@@ -158,4 +156,25 @@ void MainWidget::restartApp()
     {
         QMessageBox::critical(this, tr("Error"), tr("Failed to restart ss-link."));
     }
+}
+
+
+void MainWidget::refresh()
+{
+    QProcess *spider = new QProcess(this);
+    connect(spider, SIGNAL(finished(int)), this, SLOT(parseSpiderOutput()));
+
+    QSettings settings;
+    spider->start(settings.value("spider", "ssspider").toString(), QStringList());
+}
+
+
+void MainWidget::parseSpiderOutput()
+{
+    QProcess *spider = static_cast<QProcess *>(sender());
+    Q_ASSERT(spider);
+
+    QJsonDocument doc = QJsonDocument::fromJson(spider->readAllStandardOutput());
+    ShadowsocksServerList servers = fromJson(doc.array());
+    model_->reset(servers);
 }

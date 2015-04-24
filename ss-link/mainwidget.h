@@ -32,7 +32,7 @@ namespace Ui {
 class MainWidget;
 }
 
-class SSLink;
+class ShadowsocksServerListModel;
 
 
 class MainWidget : public QWidget
@@ -52,10 +52,12 @@ private slots:
     void showUp();
     void showOptionsDialog();
     void restartApp();
+    void refresh();
+    void parseSpiderOutput();
 
 private:
     Ui::MainWidget *ui;
-    SSLink *sslink_;
+    ShadowsocksServerListModel *model_;
     QSystemTrayIcon *tray_;
 };
 

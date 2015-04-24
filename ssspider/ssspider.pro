@@ -19,6 +19,9 @@ SOURCES += main.cpp \
 HEADERS += \
     ssspider.h
 
+RC_ICONS = ../ss-link/res/shadowsocks.ico
+VERSION = 0.3.1
+
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../shadowsocksserver/release/ -lshadowsocksserver
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../shadowsocksserver/debug/ -lshadowsocksserver
 else:unix: LIBS += -L$$OUT_PWD/../shadowsocksserver/ -lshadowsocksserver

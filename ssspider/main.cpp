@@ -1,10 +1,10 @@
 ﻿/*! ***********************************************************************************************
  *
- * \file        mainwidget.h
- * \brief       The MainWidget class.
+ * \file        main.cpp
+ * \brief       The  class.
  *
  * \version     0.1
- * \date        2015/4/15
+ * \date        2015/4/24
  *
  * \author      Roy QIU (karoyqiu@gmail.com)
  * \copyright   © 2015 Roy QIU.
@@ -21,43 +21,38 @@
  * email to karoyqiu@gmail.com.
  *
  **************************************************************************************************/
-#pragma once
-#ifndef MAINWIDGET_H
-#define MAINWIDGET_H
+#include <iostream>
+#include <QApplication>
+#include <QJsonDocument>
 
-#include <QWidget>
-#include <QSystemTrayIcon>
+#include "ssspider.h"
 
-namespace Ui {
-class MainWidget;
+static SSSpider *spider = Q_NULLPTR;
+
+
+static void printServers()
+{
+    spider->deleteLater();
+
+    QJsonDocument doc(toJson(spider->serverList()));
+    std::cout << doc.toJson().constData() << std::endl;
+
+    QApplication::quit();
 }
 
-class SSLink;
 
-
-class MainWidget : public QWidget
+int main(int argc, char *argv[])
 {
-    Q_OBJECT
+    QApplication a(argc, argv);
+    QApplication::setOrganizationName(QStringLiteral("Q"));
+    QApplication::setApplicationName(QStringLiteral("ss-link"));
+    QApplication::setApplicationDisplayName(QStringLiteral("SS-Link"));
+    QApplication::setApplicationVersion(QStringLiteral("0.3"));
+    QApplication::setQuitOnLastWindowClosed(false);
 
-public:
-    explicit MainWidget(QWidget *parent = Q_NULLPTR);
-    virtual ~MainWidget();
+    spider = new SSSpider;
+    QObject::connect(spider, &SSSpider::gotServerList, printServers);
+    spider->refresh();
 
-protected:
-    virtual void changeEvent(QEvent *e) Q_DECL_OVERRIDE;
-    virtual void closeEvent(QCloseEvent *e) Q_DECL_OVERRIDE;
-
-private slots:
-    void handleTrayActivation(QSystemTrayIcon::ActivationReason reason);
-    void showUp();
-    void showOptionsDialog();
-    void restartApp();
-
-private:
-    Ui::MainWidget *ui;
-    SSLink *sslink_;
-    QSystemTrayIcon *tray_;
-};
-
-
-#endif // MAINWIDGET_H
+    return a.exec();
+}

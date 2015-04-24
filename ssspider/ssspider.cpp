@@ -21,67 +21,53 @@
  * email to karoyqiu@gmail.com.
  *
  **************************************************************************************************/
-#include "sslink.h"
+#include "ssspider.h"
 
-#include <QtDebug>
 #include <QAction>
 #include <QSettings>
 #include <QWebElement>
 #include <QWebFrame>
 #include <QWebPage>
 
-#include "ping.h"
-#include "shadowsocksserverlistmodel.h"
 
-
-SSLink::SSLink(QObject *parent)
+SSSpider::SSSpider(QObject *parent)
     : QObject(parent)
     , page_(Q_NULLPTR)
     , stage_(None)
-    , model_(Q_NULLPTR)
 {
-    if (page_ == Q_NULLPTR)
-    {
-        page_ = new QWebPage(this);
-        Q_CHECK_PTR(page_);
-    }
+    page_ = new QWebPage(this);
+    Q_CHECK_PTR(page_);
 
-    connect(page_, &QWebPage::loadFinished, this, &SSLink::processPage);
-    connect(page_, &QWebPage::loadStarted, this, [this]()
-    {
-        qDebug() << "Load started:" << page_->mainFrame()->url();
-    });
-
-    model_ = new ShadowsocksServerListModel(this);
+    connect(page_, &QWebPage::loadFinished, this, &SSSpider::processPage);
 }
 
 
-SSLink::~SSLink()
+SSSpider::~SSSpider()
 {
 }
 
 
-ShadowsocksServerListModel *SSLink::serverList() const
+ShadowsocksServerList SSSpider::serverList() const
 {
-    return model_;
+    return servers_;
 }
 
 
-void SSLink::setUserName(const QString &value)
+void SSSpider::setUserName(const QString &value)
 {
     QSettings settings;
     settings.setValue(QStringLiteral("username"), value);
 }
 
 
-void SSLink::setPassword(const QString &value)
+void SSSpider::setPassword(const QString &value)
 {
     QSettings settings;
     settings.setValue(QStringLiteral("password"), qCompress(value.toUtf8()));
 }
 
 
-void SSLink::refresh()
+void SSSpider::refresh()
 {
     switch (stage_)
     {
@@ -96,7 +82,7 @@ void SSLink::refresh()
 }
 
 
-void SSLink::login()
+void SSSpider::login()
 {
     const QSettings settings;
     QString s = settings.value(QStringLiteral("url"), "http://my.ss-link.com/login?redirect=/my/free").toString();
@@ -105,10 +91,8 @@ void SSLink::login()
 }
 
 
-void SSLink::processPage(bool ok)
+void SSSpider::processPage(bool ok)
 {
-    qDebug() << "Load finished:" << ok << page_->mainFrame()->url();
-
     if (Q_LIKELY(ok))
     {
         switch (stage_)
@@ -123,14 +107,10 @@ void SSLink::processPage(bool ok)
             break;
         }
     }
-    else
-    {
-        qCritical() << "Failed to load web page.";
-    }
 }
 
 
-void SSLink::submitLoginForm()
+void SSSpider::submitLoginForm()
 {
     const QSettings settings;
     QWebFrame *f = page_->mainFrame();
@@ -140,7 +120,6 @@ void SSLink::submitLoginForm()
 
     if (Q_UNLIKELY(elem.isNull()))
     {
-        qCritical() << "Failed to find the email element.";
         return;
     }
 
@@ -152,7 +131,6 @@ void SSLink::submitLoginForm()
 
     if (Q_UNLIKELY(elem.isNull()))
     {
-        qCritical() << "Failed to find the password element.";
         return;
     }
 
@@ -165,7 +143,7 @@ void SSLink::submitLoginForm()
 }
 
 
-void SSLink::parseFreeAccounts()
+void SSSpider::parseFreeAccounts()
 {
     QWebFrame *f = page_->mainFrame();
     QWebElement table = f->findFirstElement("table");
@@ -178,7 +156,6 @@ void SSLink::parseFreeAccounts()
     for (int i = 0; i < tds.count(); i++)
     {
         auto th = tds.at(i);
-        qDebug() << i << th.toPlainText();
 
         if (th.toPlainText() == QStringLiteral("服务器IP"))
         {
@@ -199,9 +176,6 @@ void SSLink::parseFreeAccounts()
     }
 
     Q_ASSERT(ipIndex != -1 && portIndex != -1 && passwordIndex != -1 && cipherIndex != -1);
-    qDebug() << "IP:" << ipIndex << ", port:" << portIndex << ", password:" << passwordIndex
-             << ", cipher:" << cipherIndex;
-
     QWebElement tbody = table.findFirst("tbody tr");
     ShadowsocksServerList list;
 
@@ -218,7 +192,6 @@ void SSLink::parseFreeAccounts()
         tbody = tbody.nextSibling();
     }
 
-    model_->reset(list);
-    qDebug() << "Done.";
+    servers_ = list;
     emit gotServerList();
 }

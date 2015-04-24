@@ -22,55 +22,30 @@
  *
  **************************************************************************************************/
 #pragma once
-#ifndef SSLINK_H
-#define SSLINK_H
+#ifndef SHADOWSOCKSSERVER_H
+#define SHADOWSOCKSSERVER_H
 
-#include <QObject>
+#include <QString>
+#include <QList>
+#include <QJsonArray>
+#include <QJsonObject>
 
-class QWebPage;
-class ShadowsocksServerListModel;
 
-
-class SSLink : public QObject
+typedef struct ShadowsocksServer
 {
-    Q_OBJECT
+    QString ip;
+    int port;
+    QString password;
+    QString method;
+    int ping;
+} ShadowsocksServer;
 
-    enum Stage
-    {
-        None,
-        Login,
-        GetFreeAccount
-    };
+typedef QList<ShadowsocksServer> ShadowsocksServerList;
 
-public:
-    explicit SSLink(QObject *parent = Q_NULLPTR);
-    virtual ~SSLink();
-
-    ShadowsocksServerListModel* serverList() const;
-
-public slots:
-    void setUserName(const QString &value);
-    void setPassword(const QString &value);
-
-    void refresh();
-
-signals:
-    void loggedIn();
-    void gotServerList();
-
-private slots:
-    void login();
-    void processPage(bool ok);
-
-private:
-    void submitLoginForm();
-    void parseFreeAccounts();
-
-private:
-    QWebPage *page_;
-    Stage stage_;
-    ShadowsocksServerListModel *model_;
-};
+QJsonObject toJson(const ShadowsocksServer &server);
+QJsonArray toJson(const ShadowsocksServerList &servers);
+ShadowsocksServer fromJson(const QJsonObject &json);
+ShadowsocksServerList fromJson(const QJsonArray &array);
 
 
-#endif // SSLINK_H
+#endif // SHADOWSOCKSSERVER_H

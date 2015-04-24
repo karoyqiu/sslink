@@ -22,23 +22,56 @@
  *
  **************************************************************************************************/
 #pragma once
-#ifndef SHADOWSOCKSSERVER_H
-#define SHADOWSOCKSSERVER_H
+#ifndef SSSPIDER_H
+#define SSSPIDER_H
 
-#include <QString>
-#include <QList>
+#include <QObject>
+#include "shadowsocksserver.h"
+
+class QWebPage;
+class ShadowsocksServerListModel;
 
 
-struct ShadowsocksServer
+class SSSpider : public QObject
 {
-    QString ip;
-    int port;
-    QString password;
-    QString method;
-    int ping;
+    Q_OBJECT
+
+    enum Stage
+    {
+        None,
+        Login,
+        GetFreeAccount
+    };
+
+public:
+    explicit SSSpider(QObject *parent = Q_NULLPTR);
+    virtual ~SSSpider();
+
+    ShadowsocksServerList serverList() const;
+
+public slots:
+    void setUserName(const QString &value);
+    void setPassword(const QString &value);
+
+    void refresh();
+
+signals:
+    void loggedIn();
+    void gotServerList();
+
+private slots:
+    void login();
+    void processPage(bool ok);
+
+private:
+    void submitLoginForm();
+    void parseFreeAccounts();
+
+private:
+    QWebPage *page_;
+    Stage stage_;
+    ShadowsocksServerList servers_;
 };
 
-typedef QList<ShadowsocksServer> ShadowsocksServerList;
 
-
-#endif // SHADOWSOCKSSERVER_H
+#endif // SSSPIDER_H

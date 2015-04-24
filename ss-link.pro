@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     abstracthttpproxy.cpp \
     polipo.cpp \
     cow.cpp \
-    meow.cpp
+    meow.cpp \
+    shadowsocksserver.cpp
 
 HEADERS  += mainwidget.h \
     sslink.h \

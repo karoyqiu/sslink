@@ -27,18 +27,25 @@
 
 #include <QString>
 #include <QList>
+#include <QJsonArray>
+#include <QJsonObject>
 
 
-struct ShadowsocksServer
+typedef struct ShadowsocksServer
 {
     QString ip;
     int port;
     QString password;
     QString method;
     int ping;
-};
+} ShadowsocksServer;
 
 typedef QList<ShadowsocksServer> ShadowsocksServerList;
+
+QJsonObject toJson(const ShadowsocksServer &server);
+QJsonArray toJson(const ShadowsocksServerList &servers);
+ShadowsocksServer fromJson(const QJsonObject &json);
+ShadowsocksServerList fromJson(const QJsonArray &array);
 
 
 #endif // SHADOWSOCKSSERVER_H

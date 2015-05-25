@@ -29,11 +29,14 @@
 #include <QJsonDocument>
 #include <QMenu>
 #include <QMessageBox>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkProxy>
 #include <QProcess>
 #include <QSettings>
 #include <QSystemTrayIcon>
 #include <QTimer>
-
+#include <QSslSocket>
 #include "optionsdialog.h"
 #include "shadowsocksserverlistmodel.h"
 
@@ -43,6 +46,10 @@ MainWidget::MainWidget(QWidget *parent)
     , ui(new Ui::MainWidget)
     , model_(Q_NULLPTR)
     , tray_(Q_NULLPTR)
+    , spider_(Q_NULLPTR)
+    , retryTimer_(Q_NULLPTR)
+    , checkTimer_(Q_NULLPTR)
+    , nam_(Q_NULLPTR)
 {
     ui->setupUi(this);
 
@@ -77,7 +84,22 @@ MainWidget::MainWidget(QWidget *parent)
     tray_->setContextMenu(menu);
     tray_->show();
 
+    retryTimer_ = new QTimer(this);
+    retryTimer_->setInterval(3 * 60 * 1000);
+    retryTimer_->setSingleShot(true);
+    connect(retryTimer_, &QTimer::timeout, this, &MainWidget::refresh);
+
+    checkTimer_ = new QTimer(this);
+    checkTimer_->setInterval(60 * 1000);
+    checkTimer_->setSingleShot(true);
+    connect(checkTimer_, &QTimer::timeout, this, &MainWidget::checkAvailability);
+    connect(model_, SIGNAL(currentServerChanged()), checkTimer_, SLOT(start()));
+
+    nam_ = new QNetworkAccessManager(this);
+
     QTimer::singleShot(1000, this, SLOT(refresh()));
+
+    qDebug() << "SSL support:" << QSslSocket::supportsSsl();
 }
 
 
@@ -161,20 +183,53 @@ void MainWidget::restartApp()
 
 void MainWidget::refresh()
 {
-    QProcess *spider = new QProcess(this);
-    connect(spider, SIGNAL(finished(int)), this, SLOT(parseSpiderOutput()));
+    qDebug() << "Refreshing...";
+    delete spider_;
+
+    spider_ = new QProcess(this);
+    connect(spider_, SIGNAL(finished(int)), this, SLOT(parseSpiderOutput()));
 
     QSettings settings;
-    spider->start(settings.value("spider", "ssspider").toString(), QStringList());
+    spider_->start(settings.value("spider", "ssspider").toString(), QStringList());
+
+    retryTimer_->start();
 }
 
 
 void MainWidget::parseSpiderOutput()
 {
-    QProcess *spider = static_cast<QProcess *>(sender());
-    Q_ASSERT(spider);
-
-    QJsonDocument doc = QJsonDocument::fromJson(spider->readAllStandardOutput());
+    QJsonDocument doc = QJsonDocument::fromJson(spider_->readAllStandardOutput());
     ShadowsocksServerList servers = fromJson(doc.array());
     model_->reset(servers);
+
+    retryTimer_->stop();
+    spider_->deleteLater();
+    spider_ = Q_NULLPTR;
+}
+
+
+void MainWidget::checkAvailability()
+{
+    const QSettings settings;
+    quint16 port = static_cast<quint16>(settings.value("httpProxy/port", 8123).toUInt());
+
+    QNetworkProxy proxy(QNetworkProxy::HttpProxy, QStringLiteral("127.0.0.1"), port);
+    nam_->setProxy(proxy);
+
+    QNetworkReply *reply = nam_->get(QNetworkRequest(QUrl(QStringLiteral("https://www.google.com/"))));
+    connect(reply, &QNetworkReply::finished, this, [this, reply]()
+    {
+        if (reply->error() != QNetworkReply::NoError)
+        {
+            qWarning() << "Failed to GET" << reply->request().url().toString() << reply->errorString();
+            refresh();
+        }
+        else
+        {
+            qDebug() << "It's OK.";
+            checkTimer_->start();
+        }
+
+        reply->deleteLater();
+    });
 }

@@ -29,14 +29,11 @@
 #include <QJsonDocument>
 #include <QMenu>
 #include <QMessageBox>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QNetworkProxy>
 #include <QProcess>
 #include <QSettings>
 #include <QSystemTrayIcon>
 #include <QTimer>
-#include <QSslSocket>
+
 #include "optionsdialog.h"
 #include "shadowsocksserverlistmodel.h"
 
@@ -49,7 +46,7 @@ MainWidget::MainWidget(QWidget *parent)
     , spider_(Q_NULLPTR)
     , retryTimer_(Q_NULLPTR)
     , checkTimer_(Q_NULLPTR)
-    , nam_(Q_NULLPTR)
+    , checker_(Q_NULLPTR)
 {
     ui->setupUi(this);
 
@@ -85,7 +82,7 @@ MainWidget::MainWidget(QWidget *parent)
     tray_->show();
 
     retryTimer_ = new QTimer(this);
-    retryTimer_->setInterval(3 * 60 * 1000);
+    retryTimer_->setInterval(1 * 60 * 1000);
     retryTimer_->setSingleShot(true);
     connect(retryTimer_, &QTimer::timeout, this, &MainWidget::refresh);
 
@@ -95,11 +92,7 @@ MainWidget::MainWidget(QWidget *parent)
     connect(checkTimer_, &QTimer::timeout, this, &MainWidget::checkAvailability);
     connect(model_, SIGNAL(currentServerChanged()), checkTimer_, SLOT(start()));
 
-    nam_ = new QNetworkAccessManager(this);
-
     QTimer::singleShot(1000, this, SLOT(refresh()));
-
-    qDebug() << "SSL support:" << QSslSocket::supportsSsl();
 }
 
 
@@ -198,7 +191,9 @@ void MainWidget::refresh()
 
 void MainWidget::parseSpiderOutput()
 {
-    QJsonDocument doc = QJsonDocument::fromJson(spider_->readAllStandardOutput());
+    auto json = spider_->readAllStandardOutput();
+    qDebug() << "Spider:" << json;
+    QJsonDocument doc = QJsonDocument::fromJson(json);
     ShadowsocksServerList servers = fromJson(doc.array());
     model_->reset(servers);
 
@@ -210,26 +205,52 @@ void MainWidget::parseSpiderOutput()
 
 void MainWidget::checkAvailability()
 {
+    qDebug() << "Checking availability";
+    delete checker_;
+
     const QSettings settings;
     quint16 port = static_cast<quint16>(settings.value("httpProxy/port", 8123).toUInt());
 
-    QNetworkProxy proxy(QNetworkProxy::HttpProxy, QStringLiteral("127.0.0.1"), port);
-    nam_->setProxy(proxy);
+    checker_ = new QProcess(this);
+    connect(checker_, SIGNAL(finished(int)), this, SLOT(verifyAvailability(int)));
 
-    QNetworkReply *reply = nam_->get(QNetworkRequest(QUrl(QStringLiteral("https://www.google.com/"))));
-    connect(reply, &QNetworkReply::finished, this, [this, reply]()
-    {
-        if (reply->error() != QNetworkReply::NoError)
-        {
-            qWarning() << "Failed to GET" << reply->request().url().toString() << reply->errorString();
-            refresh();
-        }
-        else
-        {
-            qDebug() << "It's OK.";
-            checkTimer_->start();
-        }
-
-        reply->deleteLater();
-    });
+    checker_->start(settings.value("checker", "sscheck").toString(), {
+                        "--proxy-type", "3",
+                        "--proxy-host", "127.0.0.1",
+                        "--proxy-port", QString::number(port),
+                        "https://www.google.com/"
+                    });
 }
+
+
+void MainWidget::verifyAvailability(int exitCode)
+{
+    if (exitCode != 0)
+    {
+        qWarning() << "It's unavailable now:" << exitCode;
+        qWarning() << checker_->readAllStandardError();
+        refresh();
+    }
+    else
+    {
+        qDebug() << "It's OK.";
+        checkTimer_->start();
+    }
+
+    checker_->deleteLater();
+    checker_ = Q_NULLPTR;
+}
+
+
+//void MainWidget::handleSslErrors(QNetworkReply *reply, const QList<QSslError> &errors)
+//{
+//    qWarning() << "SSL error:";
+
+//    foreach (const QSslError &e, errors)
+//    {
+//        qWarning() << " -" << e.errorString();
+//    }
+
+//    reply->deleteLater();
+//    refresh();
+//}

@@ -32,7 +32,6 @@ namespace Ui {
 class MainWidget;
 }
 
-class QNetworkAccessManager;
 class QProcess;
 class ShadowsocksServerListModel;
 
@@ -57,6 +56,7 @@ private slots:
     void refresh();
     void parseSpiderOutput();
     void checkAvailability();
+    void verifyAvailability(int exitCode);
 
 private:
     Ui::MainWidget *ui;
@@ -65,7 +65,7 @@ private:
     QProcess *spider_;
     QTimer *retryTimer_;
     QTimer *checkTimer_;
-    QNetworkAccessManager *nam_;
+    QProcess *checker_;
 };
 
 

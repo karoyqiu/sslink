@@ -43,6 +43,10 @@ MainWidget::MainWidget(QWidget *parent)
     , ui(new Ui::MainWidget)
     , model_(Q_NULLPTR)
     , tray_(Q_NULLPTR)
+    , spider_(Q_NULLPTR)
+    , retryTimer_(Q_NULLPTR)
+    , checkTimer_(Q_NULLPTR)
+    , checker_(Q_NULLPTR)
 {
     ui->setupUi(this);
 
@@ -76,6 +80,17 @@ MainWidget::MainWidget(QWidget *parent)
 
     tray_->setContextMenu(menu);
     tray_->show();
+
+    retryTimer_ = new QTimer(this);
+    retryTimer_->setInterval(1 * 60 * 1000);
+    retryTimer_->setSingleShot(true);
+    connect(retryTimer_, &QTimer::timeout, this, &MainWidget::refresh);
+
+    checkTimer_ = new QTimer(this);
+    checkTimer_->setInterval(60 * 1000);
+    checkTimer_->setSingleShot(true);
+    connect(checkTimer_, &QTimer::timeout, this, &MainWidget::checkAvailability);
+    connect(model_, SIGNAL(currentServerChanged()), checkTimer_, SLOT(start()));
 
     QTimer::singleShot(1000, this, SLOT(refresh()));
 }
@@ -161,20 +176,81 @@ void MainWidget::restartApp()
 
 void MainWidget::refresh()
 {
-    QProcess *spider = new QProcess(this);
-    connect(spider, SIGNAL(finished(int)), this, SLOT(parseSpiderOutput()));
+    qDebug() << "Refreshing...";
+    delete spider_;
+
+    spider_ = new QProcess(this);
+    connect(spider_, SIGNAL(finished(int)), this, SLOT(parseSpiderOutput()));
 
     QSettings settings;
-    spider->start(settings.value("spider", "ssspider").toString(), QStringList());
+    spider_->start(settings.value("spider", "ssspider").toString(), QStringList());
+
+    retryTimer_->start();
 }
 
 
 void MainWidget::parseSpiderOutput()
 {
-    QProcess *spider = static_cast<QProcess *>(sender());
-    Q_ASSERT(spider);
-
-    QJsonDocument doc = QJsonDocument::fromJson(spider->readAllStandardOutput());
+    auto json = spider_->readAllStandardOutput();
+    qDebug() << "Spider:" << json;
+    QJsonDocument doc = QJsonDocument::fromJson(json);
     ShadowsocksServerList servers = fromJson(doc.array());
     model_->reset(servers);
+
+    retryTimer_->stop();
+    spider_->deleteLater();
+    spider_ = Q_NULLPTR;
 }
+
+
+void MainWidget::checkAvailability()
+{
+    qDebug() << "Checking availability";
+    delete checker_;
+
+    const QSettings settings;
+    quint16 port = static_cast<quint16>(settings.value("httpProxy/port", 8123).toUInt());
+
+    checker_ = new QProcess(this);
+    connect(checker_, SIGNAL(finished(int)), this, SLOT(verifyAvailability(int)));
+
+    checker_->start(settings.value("checker", "sscheck").toString(), {
+                        "--proxy-type", "3",
+                        "--proxy-host", "127.0.0.1",
+                        "--proxy-port", QString::number(port),
+                        "https://www.google.com/"
+                    });
+}
+
+
+void MainWidget::verifyAvailability(int exitCode)
+{
+    if (exitCode != 0)
+    {
+        qWarning() << "It's unavailable now:" << exitCode;
+        qWarning() << checker_->readAllStandardError();
+        refresh();
+    }
+    else
+    {
+        qDebug() << "It's OK.";
+        checkTimer_->start();
+    }
+
+    checker_->deleteLater();
+    checker_ = Q_NULLPTR;
+}
+
+
+//void MainWidget::handleSslErrors(QNetworkReply *reply, const QList<QSslError> &errors)
+//{
+//    qWarning() << "SSL error:";
+
+//    foreach (const QSslError &e, errors)
+//    {
+//        qWarning() << " -" << e.errorString();
+//    }
+
+//    reply->deleteLater();
+//    refresh();
+//}

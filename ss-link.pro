@@ -8,4 +8,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += shadowsocksserver \
     ssspider \
-    ss-link
+    ss-link \
+    sscheck

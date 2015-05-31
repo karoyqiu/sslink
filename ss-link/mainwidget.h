@@ -32,6 +32,7 @@ namespace Ui {
 class MainWidget;
 }
 
+class QProcess;
 class ShadowsocksServerListModel;
 
 
@@ -54,11 +55,17 @@ private slots:
     void restartApp();
     void refresh();
     void parseSpiderOutput();
+    void checkAvailability();
+    void verifyAvailability(int exitCode);
 
 private:
     Ui::MainWidget *ui;
     ShadowsocksServerListModel *model_;
     QSystemTrayIcon *tray_;
+    QProcess *spider_;
+    QTimer *retryTimer_;
+    QTimer *checkTimer_;
+    QProcess *checker_;
 };
 
 

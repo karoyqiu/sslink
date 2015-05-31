@@ -31,6 +31,7 @@
 #include <QSettings>
 #include <QTemporaryFile>
 #include <QTextStream>
+#include <QTimer>
 
 
 SSProxy::SSProxy(const ShadowsocksServer &server, QObject *parent)
@@ -68,6 +69,7 @@ void SSProxy::start()
     QJsonObject json;
     json.insert("server", server_.ip);
     json.insert("server_port", server_.port);
+    json.insert("local_address", "127.0.0.1");
     json.insert("local_port", settings.value("localPort", 1080).toInt());
     json.insert("password", server_.password);
     json.insert("method", server_.method);
@@ -83,7 +85,7 @@ void SSProxy::start()
     {
         if (state == QProcess::Running)
         {
-            emit ready();
+            QTimer::singleShot(3000, this, SIGNAL(ready()));
         }
     });
 

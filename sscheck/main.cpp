@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     QCoreApplication app(argc, argv);
     QCoreApplication::setOrganizationName(QStringLiteral("Q"));
     QCoreApplication::setApplicationName(QStringLiteral("ss-link"));
-    QCoreApplication::setApplicationVersion(QStringLiteral("0.1"));
+    QCoreApplication::setApplicationVersion(QStringLiteral("0.4"));
 
     qDebug() << QCoreApplication::arguments();
 

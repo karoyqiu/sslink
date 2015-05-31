@@ -40,7 +40,7 @@ RESOURCES += \
     shadowsocks.qrc
 
 RC_ICONS = res/shadowsocks.ico
-VERSION = 0.3.1
+VERSION = 0.4
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../shadowsocksserver/release/ -lshadowsocksserver
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../shadowsocksserver/debug/ -lshadowsocksserver

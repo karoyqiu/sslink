@@ -26,6 +26,7 @@
 
 #include <QtDebug>
 #include <QCloseEvent>
+#include <QDateTime>
 #include <QJsonDocument>
 #include <QMenu>
 #include <QMessageBox>
@@ -91,6 +92,11 @@ MainWidget::MainWidget(QWidget *parent)
     checkTimer_->setSingleShot(true);
     connect(checkTimer_, &QTimer::timeout, this, &MainWidget::checkAvailability);
     connect(model_, SIGNAL(currentServerChanged()), checkTimer_, SLOT(start()));
+    connect(model_, &ShadowsocksServerListModel::currentServerChanged, this, [this]()
+    {
+        this->ui->labelLastUpdate->setText(tr("Last update: %1")
+                                           .arg(QDateTime::currentDateTime().toString()));
+    });
 
     QTimer::singleShot(1000, this, SLOT(refresh()));
 }

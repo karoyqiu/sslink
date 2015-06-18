@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "SS-Link"
-#define MyAppVersion "0.4"
+#define MyAppVersion "0.4.1"
 #define MyAppPublisher "Q"
 #define MyAppExeName "ss-link.exe"
 
@@ -46,61 +46,33 @@ Source: "..\3rdparty\polipo\polipo-win32.exe"; DestDir: "{app}"; DestName: "poli
 Source: "..\3rdparty\cow\cow-x64.exe"; DestDir: "{app}"; DestName: "cow.exe"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\MEOW\MEOW-x64.exe"; DestDir: "{app}"; DestName: "MEOW.exe"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\MEOW\direct.txt"; DestDir: "{app}"
-Source: "..\3rdparty\Qt\D3Dcompiler_47.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\icudt53.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\icuin53.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\icuuc53.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\libEGL.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\libGLESV2.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\opengl32sw.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5Core.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5Gui.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5Multimedia.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5MultimediaWidgets.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5Network.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5OpenGL.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5Positioning.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5PrintSupport.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5Qml.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5Quick.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5Sensors.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5Sql.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5Svg.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5WebChannel.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5WebKit.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5WebKitWidgets.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\Qt5Widgets.dll"; DestDir: "{app}\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\audio\qtaudio_windows.dll"; DestDir: "{app}\audio\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\bearer\qgenericbearer.dll"; DestDir: "{app}\bearer\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\bearer\qnativewifibearer.dll"; DestDir: "{app}\bearer\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\iconengines\qsvgicon.dll"; DestDir: "{app}\iconengines\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\imageformats\qdds.dll"; DestDir: "{app}\imageformats\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\imageformats\qgif.dll"; DestDir: "{app}\imageformats\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\imageformats\qicns.dll"; DestDir: "{app}\imageformats\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\imageformats\qico.dll"; DestDir: "{app}\imageformats\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\imageformats\qjp2.dll"; DestDir: "{app}\imageformats\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\imageformats\qjpeg.dll"; DestDir: "{app}\imageformats\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\imageformats\qmng.dll"; DestDir: "{app}\imageformats\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\imageformats\qsvg.dll"; DestDir: "{app}\imageformats\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\imageformats\qtga.dll"; DestDir: "{app}\imageformats\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\imageformats\qtiff.dll"; DestDir: "{app}\imageformats\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\imageformats\qwbmp.dll"; DestDir: "{app}\imageformats\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\imageformats\qwebp.dll"; DestDir: "{app}\imageformats\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\mediaservice\dsengine.dll"; DestDir: "{app}\mediaservice\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\mediaservice\qtmedia_audioengine.dll"; DestDir: "{app}\mediaservice\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\mediaservice\wmfengine.dll"; DestDir: "{app}\mediaservice\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\platforms\qwindows.dll"; DestDir: "{app}\platforms\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\playlistformats\qtmultimedia_m3u.dll"; DestDir: "{app}\playlistformats\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\position\qtposition_positionpoll.dll"; DestDir: "{app}\position\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\printsupport\windowsprintersupport.dll"; DestDir: "{app}\printsupport\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\sensorgestures\qtsensorgestures_plugin.dll"; DestDir: "{app}\sensorgestures\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\sensorgestures\qtsensorgestures_shakeplugin.dll"; DestDir: "{app}\sensorgestures\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\sensors\qtsensors_dummy.dll"; DestDir: "{app}\sensors\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\sensors\qtsensors_generic.dll"; DestDir: "{app}\sensors\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\sqldrivers\qsqlite.dll"; DestDir: "{app}\sqldrivers\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\sqldrivers\qsqlmysql.dll"; DestDir: "{app}\sqldrivers\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\sqldrivers\qsqlodbc.dll"; DestDir: "{app}\sqldrivers\"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\sqldrivers\qsqlpsql.dll"; DestDir: "{app}\sqldrivers\"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\qt.conf"; DestDir: "{app}"
+Source: "..\3rdparty\Qt\D3Dcompiler_47.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\icudt53.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\icuin53.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\icuuc53.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\libEGL.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\libGLESV2.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\opengl32sw.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5Core.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5Gui.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5Multimedia.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5MultimediaWidgets.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5Network.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5OpenGL.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5Positioning.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5PrintSupport.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5Qml.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5Quick.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5Sensors.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5Sql.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5Svg.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5WebChannel.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5WebKit.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5WebKitWidgets.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\Qt5Widgets.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\iconengines\qsvgicon.dll"; DestDir: "{app}\iconengines"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\platforms\qwindows.dll"; DestDir: "{app}\platforms"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\openssl\libeay32.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\openssl\ssleay32.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\vcredist\vcredist_x64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall; Tasks: vcredist

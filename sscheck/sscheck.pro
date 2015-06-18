@@ -13,6 +13,6 @@ CONFIG   += console
 CONFIG   -= app_bundle
 
 TEMPLATE = app
-VERSION = 0.4
+VERSION = 0.4.1
 
 SOURCES += main.cpp

@@ -1,10 +1,10 @@
 ﻿/*! ***********************************************************************************************
  *
- * \file        mainwidget.h
- * \brief       The MainWidget class.
+ * \file        qrcodedialog.h
+ * \brief       The QRCodeDialog class.
  *
  * \version     0.1
- * \date        2015/4/15
+ * \date        2015/6/28
  *
  * \author      Roy QIU (karoyqiu@gmail.com)
  * \copyright   © 2015 Roy QIU.
@@ -22,52 +22,29 @@
  *
  **************************************************************************************************/
 #pragma once
-#ifndef MAINWIDGET_H
-#define MAINWIDGET_H
+#ifndef QRCODEDIALOG_H
+#define QRCODEDIALOG_H
 
-#include <QWidget>
-#include <QSystemTrayIcon>
+#include <QDialog>
 
 namespace Ui {
-class MainWidget;
+class QRCodeDialog;
 }
 
-class QProcess;
-class ShadowsocksServerListModel;
-
-
-class MainWidget : public QWidget
+class QRCodeDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit MainWidget(QWidget *parent = Q_NULLPTR);
-    virtual ~MainWidget();
+    explicit QRCodeDialog(const QString &string, QWidget *parent = 0);
+    virtual ~QRCodeDialog();
 
 protected:
-    virtual void changeEvent(QEvent *e) Q_DECL_OVERRIDE;
-    virtual void closeEvent(QCloseEvent *e) Q_DECL_OVERRIDE;
-
-private slots:
-    void handleTrayActivation(QSystemTrayIcon::ActivationReason reason);
-    void showUp();
-    void showOptionsDialog();
-    void restartApp();
-    void refresh();
-    void parseSpiderOutput();
-    void checkAvailability();
-    void verifyAvailability(int exitCode);
-    void showQRCode();
+    void changeEvent(QEvent *e);
 
 private:
-    Ui::MainWidget *ui;
-    ShadowsocksServerListModel *model_;
-    QSystemTrayIcon *tray_;
-    QProcess *spider_;
-    QTimer *retryTimer_;
-    QTimer *checkTimer_;
-    QProcess *checker_;
+    Ui::QRCodeDialog *ui;
 };
 
 
-#endif // MAINWIDGET_H
+#endif // QRCODEDIALOG_H

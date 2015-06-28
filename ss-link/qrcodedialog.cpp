@@ -1,13 +1,13 @@
 ﻿/*! ***********************************************************************************************
  *
- * file
- * brief       The  class.
+ * \file        qrcodedialog.cpp
+ * \brief       The QRCodeDialog class.
  *
- * version     0.1
- * date        2015/4/15
+ * \version     0.1
+ * \date        2015/6/28
  *
- * author      Roy QIU (karoyqiu@gmail.com)
- * copyright   © 2015 Roy QIU.
+ * \author      Roy QIU (karoyqiu@gmail.com)
+ * \copyright   © 2015 Roy QIU.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation; either version 3 of the
@@ -21,31 +21,40 @@
  * email to karoyqiu@gmail.com.
  *
  **************************************************************************************************/
-#pragma once
-#ifndef SHADOWSOCKSSERVER_H
-#define SHADOWSOCKSSERVER_H
+#include "qrcodedialog.h"
+#include "ui_qrcodedialog.h"
 
-#include <QString>
-#include <QList>
-#include <QJsonArray>
-#include <QJsonObject>
+#include <qrcode.h>
 
-typedef struct ShadowsocksServer
+
+QRCodeDialog::QRCodeDialog(const QString &string, QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::QRCodeDialog)
 {
-    QString ip;
-    int port;
-    QString password;
-    QString method;
-    int ping;
-} ShadowsocksServer;
+    ui->setupUi(this);
+    setFixedSize(218, 218);
 
-typedef QList<ShadowsocksServer> ShadowsocksServerList;
-
-QJsonObject toJson(const ShadowsocksServer &server);
-QJsonArray toJson(const ShadowsocksServerList &servers);
-ShadowsocksServer fromJson(const QJsonObject &json);
-ShadowsocksServerList fromJson(const QJsonArray &array);
-QByteArray uri(const ShadowsocksServer &server);
+    QRCode qr(0, QRCode::M);
+    ui->labelQRCode->setPixmap(qr.encode(string).scaledToHeight(200));
+}
 
 
-#endif // SHADOWSOCKSSERVER_H
+QRCodeDialog::~QRCodeDialog()
+{
+    delete ui;
+}
+
+
+void QRCodeDialog::changeEvent(QEvent *e)
+{
+    QDialog::changeEvent(e);
+
+    switch (e->type())
+    {
+    case QEvent::LanguageChange:
+        ui->retranslateUi(this);
+        break;
+    default:
+        break;
+    }
+}

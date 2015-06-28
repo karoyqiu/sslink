@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     abstracthttpproxy.cpp \
     polipo.cpp \
     cow.cpp \
-    meow.cpp
+    meow.cpp \
+    qrcodedialog.cpp
 
 HEADERS  += mainwidget.h \
     shadowsocksserverlistmodel.h \
@@ -31,10 +32,12 @@ HEADERS  += mainwidget.h \
     abstracthttpproxy.h \
     polipo.h \
     cow.h \
-    meow.h
+    meow.h \
+    qrcodedialog.h
 
 FORMS    += mainwidget.ui \
-    optionsdialog.ui
+    optionsdialog.ui \
+    qrcodedialog.ui
 
 RESOURCES += \
     shadowsocks.qrc

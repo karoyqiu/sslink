@@ -1,13 +1,13 @@
 ﻿/*! ***********************************************************************************************
  *
- * file
- * brief       The  class.
+ * \file        qrcode_global.h
+ * \brief       The  class.
  *
- * version     0.1
- * date        2015/4/15
+ * \version     0.1
+ * \date        2015/6/24
  *
- * author      Roy QIU (karoyqiu@gmail.com)
- * copyright   © 2015 Roy QIU.
+ * \author      Roy QIU (karoyqiu@gmail.com)
+ * \copyright   © 2015 Roy QIU.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation; either version 3 of the
@@ -22,30 +22,16 @@
  *
  **************************************************************************************************/
 #pragma once
-#ifndef SHADOWSOCKSSERVER_H
-#define SHADOWSOCKSSERVER_H
 
-#include <QString>
-#include <QList>
-#include <QJsonArray>
-#include <QJsonObject>
+#ifndef QRCODE_GLOBAL_H
+#define QRCODE_GLOBAL_H
 
-typedef struct ShadowsocksServer
-{
-    QString ip;
-    int port;
-    QString password;
-    QString method;
-    int ping;
-} ShadowsocksServer;
+#include <QtGlobal>
 
-typedef QList<ShadowsocksServer> ShadowsocksServerList;
+#if defined(QRCODE_LIBRARY)
+#  define QRCODESHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define QRCODESHARED_EXPORT Q_DECL_IMPORT
+#endif
 
-QJsonObject toJson(const ShadowsocksServer &server);
-QJsonArray toJson(const ShadowsocksServerList &servers);
-ShadowsocksServer fromJson(const QJsonObject &json);
-ShadowsocksServerList fromJson(const QJsonArray &array);
-QByteArray uri(const ShadowsocksServer &server);
-
-
-#endif // SHADOWSOCKSSERVER_H
+#endif // QRCODE_GLOBAL_H

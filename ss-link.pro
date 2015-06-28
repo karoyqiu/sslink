@@ -9,4 +9,5 @@ TEMPLATE = subdirs
 SUBDIRS += shadowsocksserver \
     ssspider \
     ss-link \
-    sscheck
+    sscheck \
+    qrcode

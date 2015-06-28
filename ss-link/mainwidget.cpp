@@ -38,6 +38,7 @@
 #include "optionsdialog.h"
 #include "shadowsocksserverlistmodel.h"
 
+#include "qrcodedialog.h"
 
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
@@ -55,6 +56,7 @@ MainWidget::MainWidget(QWidget *parent)
     ui->treeView->setModel(model_);
     connect(ui->treeView, &QTreeView::doubleClicked,
             model_, &ShadowsocksServerListModel::selectServer);
+    connect(ui->buttonQRCode, &QPushButton::clicked, this, &MainWidget::showQRCode);
     connect(ui->buttonRefresh, &QPushButton::clicked, this, &MainWidget::refresh);
     connect(ui->buttonExit, &QPushButton::clicked, qApp, &QApplication::quit);
 
@@ -248,15 +250,8 @@ void MainWidget::verifyAvailability(int exitCode)
 }
 
 
-//void MainWidget::handleSslErrors(QNetworkReply *reply, const QList<QSslError> &errors)
-//{
-//    qWarning() << "SSL error:";
-
-//    foreach (const QSslError &e, errors)
-//    {
-//        qWarning() << " -" << e.errorString();
-//    }
-
-//    reply->deleteLater();
-//    refresh();
-//}
+void MainWidget::showQRCode()
+{
+    QRCodeDialog dialog(uri(model_->currentServer()), this);
+    dialog.exec();
+}

@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "SS-Link"
-#define MyAppVersion "0.4.1"
+#define MyAppVersion "0.5"
 #define MyAppPublisher "Q"
 #define MyAppExeName "ss-link.exe"
 
@@ -41,6 +41,7 @@ Name: "autorun"; Description: "{cm:AutoStartProgram,{#MyAppName}}"; GroupDescrip
 Source: "..\..\build-ss-link\ss-link\release\ss-link.exe"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
 Source: "..\..\build-ss-link\ssspider\release\ssspider.exe"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
 Source: "..\..\build-ss-link\sscheck\release\sscheck.exe"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\..\build-ss-link\qrcode\release\qrcode.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\shadowsocks\shadowsocks-libqss-win64.exe"; DestDir: "{app}"; DestName: "sslocal.exe"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\polipo\polipo-win32.exe"; DestDir: "{app}"; DestName: "polipo.exe"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\cow\cow-x64.exe"; DestDir: "{app}"; DestName: "cow.exe"; Flags: restartreplace uninsrestartdelete

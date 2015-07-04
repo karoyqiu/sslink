@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "SS-Link"
-#define MyAppVersion "0.4.1"
+#define MyAppVersion "0.5"
 #define MyAppPublisher "Q"
 #define MyAppExeName "ss-link.exe"
 
@@ -41,6 +41,7 @@ Name: "autorun"; Description: "{cm:AutoStartProgram,{#MyAppName}}"; GroupDescrip
 Source: "..\..\build-ss-link\ss-link\release\ss-link.exe"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
 Source: "..\..\build-ss-link\ssspider\release\ssspider.exe"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
 Source: "..\..\build-ss-link\sscheck\release\sscheck.exe"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\..\build-ss-link\qrcode\release\qrcode.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\shadowsocks\shadowsocks-libqss-win64.exe"; DestDir: "{app}"; DestName: "sslocal.exe"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\polipo\polipo-win32.exe"; DestDir: "{app}"; DestName: "polipo.exe"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\cow\cow-x64.exe"; DestDir: "{app}"; DestName: "cow.exe"; Flags: restartreplace uninsrestartdelete
@@ -48,9 +49,9 @@ Source: "..\3rdparty\MEOW\MEOW-x64.exe"; DestDir: "{app}"; DestName: "MEOW.exe";
 Source: "..\3rdparty\MEOW\direct.txt"; DestDir: "{app}"
 Source: "..\3rdparty\Qt\qt.conf"; DestDir: "{app}"
 Source: "..\3rdparty\Qt\D3Dcompiler_47.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\icudt53.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\icuin53.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\icuuc53.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\icudt54.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\icuin54.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\icuuc54.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\Qt\libEGL.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\Qt\libGLESV2.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\Qt\opengl32sw.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete

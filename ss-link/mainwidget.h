@@ -57,6 +57,7 @@ private slots:
     void parseSpiderOutput();
     void checkAvailability();
     void verifyAvailability(int exitCode);
+    void showQRCode();
 
 private:
     Ui::MainWidget *ui;

@@ -38,6 +38,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="buttonQRCode">
+       <property name="text">
+        <string>&amp;QR Code</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="buttonRefresh">
        <property name="text">
         <string>&amp;Refresh</string>
@@ -58,6 +65,8 @@
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>treeView</tabstop>
+  <tabstop>buttonExit</tabstop>
+  <tabstop>buttonRefresh</tabstop>
  </tabstops>
  <resources>
   <include location="shadowsocks.qrc"/>

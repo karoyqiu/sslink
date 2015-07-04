@@ -75,3 +75,12 @@ ShadowsocksServerList fromJson(const QJsonArray &array)
 
     return servers;
 }
+
+
+QByteArray uri(const ShadowsocksServer &server)
+{
+    QString url = QString("%1:%2@%3:%4").arg(server.method, server.password, server.ip).arg(server.port);
+    QByteArray bytes = url.toLocal8Bit();
+    bytes = "ss://" + bytes.toBase64(QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals);
+    return bytes;
+}

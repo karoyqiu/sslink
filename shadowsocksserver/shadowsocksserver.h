@@ -30,7 +30,6 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-
 typedef struct ShadowsocksServer
 {
     QString ip;
@@ -46,6 +45,7 @@ QJsonObject toJson(const ShadowsocksServer &server);
 QJsonArray toJson(const ShadowsocksServerList &servers);
 ShadowsocksServer fromJson(const QJsonObject &json);
 ShadowsocksServerList fromJson(const QJsonArray &array);
+QByteArray uri(const ShadowsocksServer &server);
 
 
 #endif // SHADOWSOCKSSERVER_H

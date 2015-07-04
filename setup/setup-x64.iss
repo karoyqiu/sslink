@@ -27,6 +27,9 @@ ArchitecturesAllowed=x64 ia64
 MinVersion=0,6.1
 OutputDir=..\output
 PrivilegesRequired=none
+SetupIconFile=setup.ico
+WizardImageFile=compiler:WizModernImage-IS.bmp
+WizardSmallImageFile=compiler:WizModernSmallImage-IS.bmp
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"

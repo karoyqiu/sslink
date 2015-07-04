@@ -49,9 +49,9 @@ Source: "..\3rdparty\MEOW\MEOW-x64.exe"; DestDir: "{app}"; DestName: "MEOW.exe";
 Source: "..\3rdparty\MEOW\direct.txt"; DestDir: "{app}"
 Source: "..\3rdparty\Qt\qt.conf"; DestDir: "{app}"
 Source: "..\3rdparty\Qt\D3Dcompiler_47.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\icudt53.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\icuin53.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
-Source: "..\3rdparty\Qt\icuuc53.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\icudt54.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\icuin54.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
+Source: "..\3rdparty\Qt\icuuc54.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\Qt\libEGL.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\Qt\libGLESV2.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete
 Source: "..\3rdparty\Qt\opengl32sw.dll"; DestDir: "{app}"; Flags: restartreplace uninsrestartdelete

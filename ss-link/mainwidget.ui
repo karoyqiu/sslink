@@ -28,19 +28,19 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="buttonQRCode">
-       <property name="text">
-        <string>&amp;QR Code</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QLabel" name="labelLastUpdate">
        <property name="sizePolicy">
         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonQRCode">
+       <property name="text">
+        <string>&amp;QR Code</string>
        </property>
       </widget>
      </item>
@@ -65,7 +65,6 @@
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>treeView</tabstop>
-  <tabstop>buttonQRCode</tabstop>
   <tabstop>buttonExit</tabstop>
   <tabstop>buttonRefresh</tabstop>
  </tabstops>
